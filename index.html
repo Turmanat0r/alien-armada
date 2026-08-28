@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alien Armada</title>
+<meta name="description" content="A free, no-signup 2-player Battleship-style game with a twist — secretly plant depth charges before deploying your fleet, then hunt each other in the dark.">
+<meta name="theme-color" content="#050914">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Alien Armada">
+<meta property="og:description" content="Deploy your fleet, plant depth charges, hunt in the dark — free 2-player party game, no account needed.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%91%BD%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050914; --card:#0F1B2E; --card2:#14263F;
+    --ink:#DFFFE0; --sub:#7C93A8;
+    --acid:#7CFF6B; --danger:#FF3B5C; --warn:#FFD23F; --water:#3FA9F5;
+    --line:rgba(124,255,107,0.15);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;font-family:'Nunito',sans-serif;color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 0%, #10243a 0%, transparent 55%),
+      radial-gradient(circle at 90% 15%, #1a1030 0%, transparent 45%),
+      var(--bg);
+    padding:14px;padding-bottom:50px;min-height:100vh;
+  }
+  .wrap{max-width:480px;margin:0 auto;}
+  h1{
+    font-family:'Orbitron',sans-serif;font-weight:800;font-size:24px;text-align:center;
+    color:var(--acid);text-shadow:0 0 12px rgba(124,255,107,0.5);margin:6px 0 2px 0;letter-spacing:1px;
+  }
+  .tagline{text-align:center;color:var(--sub);font-weight:700;font-size:12.5px;margin-bottom:16px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;}
+  h2{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--warn);margin:0 0 8px 0;letter-spacing:0.5px;}
+  .btn{
+    display:block;width:100%;padding:14px;border:none;border-radius:12px;
+    font-family:'Orbitron';font-weight:700;font-size:14px;color:#04140a;
+    background:var(--acid);cursor:pointer;margin-top:8px;letter-spacing:0.5px;
+  }
+  .btn-inline{width:auto;padding:8px 14px;}
+  .btn.warn{background:var(--warn);}
+  .btn.danger{background:var(--danger);color:#fff;}
+  .btn.outline{background:transparent;border:2px solid var(--line);color:var(--ink);font-family:'Nunito';font-weight:800;}
+  .btn:disabled{opacity:0.35;}
+  input[type=text]{
+    width:100%;padding:12px;border-radius:10px;border:2px solid var(--line);
+    background:var(--card2);color:var(--ink);font-weight:700;font-size:15px;
+  }
+  input[type=text]:focus{outline:2px solid var(--warn);outline-offset:1px;}
+  label{font-size:12px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:0.5px;}
+  .players{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+  .player-row{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--card2);border-radius:10px;padding:8px 12px;font-weight:700;
+  }
+  .player-row.turn{border:2px solid var(--acid);}
+  .hint{font-size:12.5px;color:var(--sub);line-height:1.5;margin-top:6px;}
+  .room-code{
+    font-family:'Orbitron';font-size:15px;text-align:center;letter-spacing:1px;word-break:break-all;
+    background:var(--card2);border-radius:10px;padding:10px;margin:6px 0;user-select:all;-webkit-user-select:all;
+  }
+  .center{text-align:center;}
+  .hidden{display:none;}
+  .toolrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;}
+  .colordot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0;}
+  .colordot.active{outline:3px solid var(--warn);outline-offset:2px;}
+  .animalBtn{
+    width:40px;height:40px;border-radius:10px;border:2px solid var(--line);
+    background:var(--card2);cursor:pointer;font-size:20px;padding:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .animalBtn.active{outline:3px solid var(--warn);outline-offset:2px;background:var(--card);}
+  #joinBox{margin-top:10px;}
+  #overTitle{font-size:20px;}
+  .grid{
+    display:grid;grid-template-columns:repeat(10,1fr);gap:2px;
+    background:var(--card2);padding:4px;border-radius:8px;margin:8px 0;
+  }
+  .cell{
+    aspect-ratio:1;border:none;border-radius:3px;background:#0A1622;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:12px;padding:0;color:var(--ink);
+  }
+  .cell.ship{background:var(--acid);}
+  .cell.charge-selected{background:var(--warn);}
+  .cell.hit{background:var(--danger);color:#fff;}
+  .cell.charge-hit{background:#7a1030;color:#fff;}
+  .cell.miss{background:var(--water);opacity:0.55;}
+  .cell.sunk{background:#3a1030;color:#fff;}
+  .cell:disabled{cursor:default;}
+  .shiplist{display:flex;flex-direction:column;gap:6px;margin:8px 0;}
+  .ship-chip{
+    display:flex;justify-content:space-between;padding:8px 10px;border-radius:8px;
+    background:var(--card2);font-weight:700;font-size:13px;border:2px solid transparent;
+  }
+  .ship-chip.active{border-color:var(--warn);}
+  .ship-chip.done{opacity:0.4;text-decoration:line-through;}
+  .turn-banner{
+    font-family:'Orbitron';text-align:center;font-size:15px;padding:10px;border-radius:10px;
+    background:var(--card2);color:var(--acid);margin-bottom:8px;letter-spacing:0.5px;
+  }
+  .turn-banner.waiting{color:var(--sub);}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--sub);margin-top:6px;}
+  .legend span{display:inline-flex;align-items:center;gap:4px;}
+  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>👽 ALIEN ARMADA</h1>
+    <div class="tagline">Deploy your fleet, plant depth charges, hunt in the dark</div>
+  </header>
+  <main>
+
+  <!-- LANDING -->
+  <div id="screen-landing">
+    <div class="card">
+      <label>Your favorite animal</label>
+      <div class="toolrow" id="favAnimalRow" role="group" aria-label="Favorite animal"></div>
+      <label>Your favorite color</label>
+      <div class="toolrow" id="favColorRow" role="group" aria-label="Favorite color"></div>
+      <label>Your commander name</label>
+      <div class="room-code" id="namePreview" aria-live="polite">Pick an animal and a color first</div>
+      <div class="hint">Auto-generated from Greek &amp; Roman mythology — no real names needed. Don't like it? Roll again.</div>
+      <button type="button" class="btn outline hidden" id="regenNameBtn">🎲 Different name</button>
+      <button type="button" class="btn" id="createBtn">🎉 Create a new battle</button>
+      <button type="button" class="btn outline" id="showJoinBtn" aria-expanded="false" aria-controls="joinBox">🔗 Join a battle</button>
+      <div id="joinBox" class="hidden">
+        <label for="codeInput">Battle code</label>
+        <input type="text" id="codeInput" placeholder="Paste the code" autocomplete="off">
+        <button type="button" class="btn warn" id="joinBtn">Join Battle</button>
+      </div>
+    </div>
+    <div class="hint">Exactly 2 players. Open this same page on both phones — one creates the battle and shares the join link, the other joins with it.</div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="screen-lobby" class="hidden">
+    <div class="card center">
+      <label id="lobbyCodeLabel">Battle code — share this</label>
+      <div class="room-code" id="lobbyCode" aria-labelledby="lobbyCodeLabel">----</div>
+      <button type="button" class="btn outline" id="copyLinkBtn">📤 Send Join Link</button>
+      <button type="button" class="btn outline" id="copyCodeBtn">📋 Copy Code</button>
+      <div class="players" id="lobbyPlayers" aria-live="polite"></div>
+      <button type="button" class="btn warn hidden" id="startSetupBtn">▶️ Begin Deployment</button>
+      <div class="hint">Waiting for a second commander to join...</div>
+    </div>
+    <div class="hint center" id="connStatus" role="status" aria-live="polite"></div>
+    <button type="button" class="btn outline" id="leaveLobbyBtn">Leave Battle</button>
+  </div>
+
+  <!-- SETUP -->
+  <div id="screen-setup" class="hidden">
+    <div id="setup-charges" class="card hidden">
+      <h2>Step 1 — Plant 4 Depth Charges</h2>
+      <div class="hint">Secretly mark 4 cells on the enemy's territory before they've placed a single ship. If one lands on a ship later, that ship needs one less hit to destroy — but you'll never be told if it landed.</div>
+      <div class="grid" id="chargeGrid"></div>
+      <div class="center hint" id="chargeCount">0 / 4 selected</div>
+      <button type="button" class="btn warn" id="confirmChargesBtn" disabled>Confirm Charges</button>
+    </div>
+
+    <div id="setup-fleet" class="card hidden">
+      <h2>Step 2 — Deploy Your Fleet</h2>
+      <div class="toolrow">
+        <button type="button" class="btn outline btn-inline" id="rotateBtn">🔄 Orientation: Horizontal</button>
+        <button type="button" class="btn outline btn-inline" id="randomFleetBtn">🎲 Random</button>
+        <button type="button" class="btn outline btn-inline" id="resetFleetBtn">↩️ Reset</button>
+      </div>
+      <div class="shiplist" id="shipList"></div>
+      <div class="grid" id="fleetGrid"></div>
+      <button type="button" class="btn warn hidden" id="confirmFleetBtn">Ready for Battle</button>
+    </div>
+
+    <div id="setup-waiting" class="card hidden center">
+      <div id="setupWaitingText">Standing by for your opponent to finish deployment...</div>
+    </div>
+  </div>
+
+  <!-- BATTLE -->
+  <div id="screen-battle" class="hidden">
+    <div class="turn-banner" id="turnBanner"></div>
+    <div class="card">
+      <h2>🛰️ Enemy Waters — tap to fire</h2>
+      <div class="grid" id="enemyGrid"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--danger);"></span>Hit</span>
+        <span><span class="swatch" style="background:var(--water);opacity:.55;"></span>Miss</span>
+        <span><span class="swatch" style="background:#3a1030;"></span>Sunk</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🚀 Your Fleet</h2>
+      <div class="grid" id="myGrid"></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--acid);"></span>Ship</span>
+        <span><span class="swatch" style="background:var(--danger);"></span>Hit</span>
+        <span><span class="swatch" style="background:#7a1030;"></span>💣 Depth charge (secret)</span>
+      </div>
+    </div>
+    <button type="button" class="btn outline" id="leaveBattleBtn">Leave Battle</button>
+  </div>
+
+  <!-- GAME OVER -->
+  <div id="screen-over" class="hidden">
+    <div class="card center">
+      <h1 id="overTitle"></h1>
+      <div class="hint" id="overSub"></div>
+      <button type="button" class="btn warn" id="rematchBtn">🔄 Rematch</button>
+      <button type="button" class="btn outline" id="newBattleBtn">🏠 New Battle</button>
+    </div>
+  </div>
+  </main>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+// ============== CONFIG ==============
+const N = 10;
+const SHIP_TEMPLATE = [
+  {name:'Mothership', size:5, icon:'🛸'},
+  {name:'Bio-Cruiser', size:4, icon:'👽'},
+  {name:'Void Scout', size:3, icon:'🌀'},
+  {name:'Spore Pod', size:3, icon:'🧫'},
+  {name:'Probe Drone', size:2, icon:'📡'},
+];
+const MAX_CHARGES = 4;
+const API_BASE = '/api/room';
+
+// ============== PLAYER NAME (favorite animal + color -> mythology name) ==============
+// Purely a per-viewer display identity — favorite animal picks a real
+// Greek/Roman mythology name (never a fantasy mashup, never a real
+// person's name); favorite color picks which themed pool it comes from.
+// Same animal + color always gives the same name.
+const FAVORITE_ANIMALS = [
+  {name:'Lion', icon:'🦁'}, {name:'Wolf', icon:'🐺'}, {name:'Eagle', icon:'🦅'}, {name:'Owl', icon:'🦉'},
+  {name:'Dolphin', icon:'🐬'}, {name:'Fox', icon:'🦊'}, {name:'Bear', icon:'🐻'}, {name:'Serpent', icon:'🐍'},
+];
+const FAVORITE_COLORS = [
+  {name:'Red', hex:'#E63946'}, {name:'Orange', hex:'#F4A300'}, {name:'Yellow', hex:'#FFD400'}, {name:'Green', hex:'#2ECC71'},
+  {name:'Blue', hex:'#3FA9F5'}, {name:'Purple', hex:'#9B5DE5'}, {name:'Pink', hex:'#FF6FB5'}, {name:'Black', hex:'#2B2B2B'},
+];
+const MYTH_NAMES = {
+  Red: ['Ares','Mars','Vulcan','Hephaestus','Nike','Achilles','Ajax','Hector','Pyrrha','Perseus','Theseus','Cerberus','Priam','Menelaus'],
+  Orange: ['Apollo','Helios','Aurora','Eos','Demeter','Ceres','Phaeton','Icarus','Prometheus','Midas','Flora','Pomona','Vertumnus','Hyperion'],
+  Yellow: ['Athena','Minerva','Hermes','Mercury','Hebe','Tyche','Fortuna','Castor','Pollux','Janus','Fides','Concordia','Nestor','Orpheus'],
+  Green: ['Gaia','Pan','Rhea','Cronus','Terminus','Persephone','Proserpina','Dionysus','Bacchus','Echo','Narcissus','Daedalus','Atalanta','Europa'],
+  Blue: ['Poseidon','Neptune','Zeus','Jupiter','Oceanus','Tethys','Iris','Uranus','Calypso','Ariadne','Circe','Jason','Triton','Nyx'],
+  Purple: ['Hades','Pluto','Hecate','Nemesis','Morpheus','Hypnos','Thanatos','Erebus','Chaos','Medusa','Cassandra','Andromeda','Psyche','Sisyphus'],
+  Pink: ['Aphrodite','Venus','Eros','Cupid','Amor','Hestia','Vesta','Helen','Paris','Adonis','Pygmalion','Galatea','Selene','Luna'],
+  Black: ['Tantalus','Odysseus','Ulysses','Bellerophon','Deucalion','Charon','Styx','Orion','Momus','Harmonia','Cadmus','Argus','Chiron','Sibyl'],
+};
+let favAnimal = null, favColor = null;
+/**
+ * Deterministically derives a display name from a favorite animal + color —
+ * a real Greek/Roman mythology name (e.g. "Athena", "Triton"), never a
+ * fantasy mashup and never a real person's name. Same animal + color
+ * always gives the same name.
+ *
+ * Color picks which themed pool of 14 names to use; the animal's own
+ * position in FAVORITE_ANIMALS (0-7) picks which of the first 8 names in
+ * that pool you get. Using the animal's index directly — rather than
+ * hashing the animal/color strings together — guarantees every animal
+ * maps to a distinct name within a given color's pool; a string hash
+ * over only 8 possible animal values collided far too often in testing
+ * (e.g. two different animals both landing on "Zeus" for Blue).
+ * @param {string|null} animalName
+ * @param {string|null} colorName
+ * @returns {string|null}
+ */
+function generateMythName(animalName, colorName){
+  const pool = colorName && MYTH_NAMES[colorName];
+  const animalIdx = FAVORITE_ANIMALS.findIndex(a=>a.name===animalName);
+  if(animalIdx===-1 || !pool) return null;
+  return pool[animalIdx];
+}
+/**
+ * Picks a fresh random name from within the chosen color's pool — used by
+ * the "Different name" reroll button.
+ * @param {string} colorName
+ * @returns {string|null}
+ */
+function randomMythName(colorName){
+  const pool = colorName && MYTH_NAMES[colorName];
+  if(!pool) return null;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+/** Recomputes myName from the current animal + color selections, if both are set. */
+function updateGeneratedName(){
+  myName = generateMythName(favAnimal, favColor);
+  renderNamePreview();
+}
+/** Reflects the current `myName` value (or a placeholder) in the landing UI. */
+function renderNamePreview(){
+  const el = document.getElementById('namePreview');
+  const btn = document.getElementById('regenNameBtn');
+  if(myName){
+    el.textContent = myName;
+    btn.classList.remove('hidden');
+  } else {
+    el.textContent = 'Pick an animal and a color first';
+    btn.classList.add('hidden');
+  }
+}
+/** Builds the favorite-animal button row on the landing screen. */
+function buildFavAnimalRow(){
+  const row = document.getElementById('favAnimalRow');
+  FAVORITE_ANIMALS.forEach(a=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'animalBtn';
+    btn.textContent = a.icon;
+    btn.setAttribute('aria-label', 'Favorite animal ' + a.name);
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', ()=>{
+      favAnimal = a.name;
+      document.querySelectorAll('#favAnimalRow .animalBtn').forEach(d=>{
+        d.classList.remove('active');
+        d.setAttribute('aria-pressed','false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
+      updateGeneratedName();
+    });
+    row.appendChild(btn);
+  });
+}
+/** Builds the favorite-color swatch picker on the landing screen. */
+function buildFavColorRow(){
+  const row = document.getElementById('favColorRow');
+  FAVORITE_COLORS.forEach(c=>{
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'colordot';
+    dot.style.background = c.hex;
+    dot.setAttribute('aria-label', 'Favorite color ' + c.name);
+    dot.setAttribute('aria-pressed', 'false');
+    dot.addEventListener('click', ()=>{
+      favColor = c.name;
+      document.querySelectorAll('#favColorRow .colordot').forEach(d=>{
+        d.classList.remove('active');
+        d.setAttribute('aria-pressed','false');
+      });
+      dot.classList.add('active');
+      dot.setAttribute('aria-pressed','true');
+      updateGeneratedName();
+    });
+    row.appendChild(dot);
+  });
+}
+buildFavAnimalRow();
+buildFavColorRow();
+
+// ============== STATE ==============
+let room = '', myName = '', myAnimal = null, myId = Math.random().toString(36).slice(2,9);
+let players = [];
+let meta = null;
+let boards = {};
+let ready = {};
+let pollTimer = null;
+let connOk = true;
+
+// setup-local state (not synced until confirmed)
+let setupInitialized = false;
+let chargeSelection = [];
+let myShips = [];
+let currentShipIdx = 0;
+let orientation = 'H';
+
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function cellKey(x,y){ return x+','+y; }
+function opponentPlayer(){ return players.find(p=>p.id!==myId) || null; }
+function animalIconFor(name){
+  const a = FAVORITE_ANIMALS.find(x=>x.name===name);
+  return a ? a.icon : '';
+}
+
+// ============== STORAGE (our own serverless API, backed by a private Redis store) ==============
+// Room state lives behind /api/room (see api/room.js) instead of a public
+// third-party service — the store's credentials never reach the browser,
+// room codes/keys are validated server-side, and idle rooms expire on their
+// own. Access control is still just "knowing the room code" (same model as
+// before) — that's an accepted trade-off for a zero-login party game; don't
+// reuse this room-code pattern for anything that needs real access control.
+function setConnStatus(ok){
+  connOk = ok;
+  const el = document.getElementById('connStatus');
+  if(el) el.textContent = ok ? '' : '⚠️ Connection trouble — retrying...';
+}
+async function createRoom(){
+  const res = await fetch(`${API_BASE}?action=create`, {method:'POST'});
+  if(!res.ok) throw new Error('create failed: HTTP '+res.status);
+  const data = await res.json();
+  if(!data || !data.room) throw new Error('room service returned an empty id');
+  return data.room;
+}
+async function checkRoomExists(code){
+  try{
+    const res = await fetch(`${API_BASE}?room=${encodeURIComponent(code)}&key=players`);
+    if(res.status===404) return {exists:false, networkError:false};
+    return {exists: res.ok, networkError: !res.ok};
+  }catch(e){
+    return {exists:false, networkError:true};
+  }
+}
+async function loadJSON(key){
+  try{
+    const res = await fetch(`${API_BASE}?room=${encodeURIComponent(room)}&key=${encodeURIComponent(key)}`);
+    if(res.status===404){ setConnStatus(true); return null; }
+    if(!res.ok){ setConnStatus(false); return null; }
+    const text = await res.text();
+    setConnStatus(true);
+    return text ? JSON.parse(text) : null;
+  }catch(e){ setConnStatus(false); return null; }
+}
+async function saveJSON(key, obj){
+  try{
+    const res = await fetch(`${API_BASE}?room=${encodeURIComponent(room)}&key=${encodeURIComponent(key)}`, {method:'POST', body: JSON.stringify(obj)});
+    setConnStatus(res.ok);
+    return res.ok;
+  }catch(e){ setConnStatus(false); return false; }
+}
+function ensureBoardSkeleton(boardsObj, pid){
+  if(!boardsObj[pid]) boardsObj[pid] = {ships:[], charges:[], shotsAgainst:[]};
+  if(!boardsObj[pid].ships) boardsObj[pid].ships=[];
+  if(!boardsObj[pid].charges) boardsObj[pid].charges=[];
+  if(!boardsObj[pid].shotsAgainst) boardsObj[pid].shotsAgainst=[];
+}
+
+// ============== GAME LOGIC HELPERS ==============
+function computeShips(board){
+  const directHits = new Set((board.shotsAgainst||[]).filter(s=>s.result==='hit').map(s=>cellKey(s.x,s.y)));
+  const chargeSet = new Set((board.charges||[]).map(c=>cellKey(c[0],c[1])));
+  return (board.ships||[]).map(ship=>{
+    const hitCells = ship.cells.filter(([x,y])=> directHits.has(cellKey(x,y)) || chargeSet.has(cellKey(x,y)));
+    return Object.assign({}, ship, {hitCount:hitCells.length, sunk: hitCells.length===ship.cells.length});
+  });
+}
+function isCellShip(board,x,y){ return (board.ships||[]).some(sh=>sh.cells.some(([sx,sy])=>sx===x&&sy===y)); }
+function isCellDirectHit(board,x,y){ return (board.shotsAgainst||[]).some(s=>s.x===x&&s.y===y&&s.result==='hit'); }
+function isCellMiss(board,x,y){ return (board.shotsAgainst||[]).some(s=>s.x===x&&s.y===y&&s.result==='miss'); }
+function isCellChargeHit(board,x,y){
+  const chargeSet = new Set((board.charges||[]).map(c=>cellKey(c[0],c[1])));
+  if(!chargeSet.has(cellKey(x,y))) return false;
+  return isCellShip(board,x,y);
+}
+function canPlace(existingShips, startX, startY, size, orient){
+  const cells=[];
+  for(let i=0;i<size;i++){
+    const x = orient==='H' ? startX+i : startX;
+    const y = orient==='H' ? startY : startY+i;
+    if(x<0||x>=N||y<0||y>=N) return null;
+    cells.push([x,y]);
+  }
+  for(const s of existingShips){
+    for(const [ex,ey] of s.cells){
+      if(cells.some(([x,y])=>x===ex&&y===ey)) return null;
+    }
+  }
+  return cells;
+}
+function randomFleet(){
+  for(let attempt=0; attempt<200; attempt++){
+    const ships=[];
+    let ok=true;
+    for(const tmpl of SHIP_TEMPLATE){
+      let placed=false;
+      for(let tries=0; tries<200; tries++){
+        const o = Math.random()<0.5?'H':'V';
+        const x = Math.floor(Math.random()*N);
+        const y = Math.floor(Math.random()*N);
+        const cells = canPlace(ships, x, y, tmpl.size, o);
+        if(cells){ ships.push({name:tmpl.name,size:tmpl.size,icon:tmpl.icon,cells}); placed=true; break; }
+      }
+      if(!placed){ ok=false; break; }
+    }
+    if(ok) return ships;
+  }
+  return [];
+}
+
+// ============== SCREENS ==============
+function showScreen(id){
+  ['screen-landing','screen-lobby','screen-setup','screen-battle','screen-over'].forEach(s=>{
+    document.getElementById(s).classList.toggle('hidden', s!==id);
+  });
+}
+function showSetupSub(id){
+  ['setup-charges','setup-fleet','setup-waiting'].forEach(s=>{
+    document.getElementById(s).classList.toggle('hidden', s!==id);
+  });
+}
+
+// ============== LANDING ==============
+document.getElementById('showJoinBtn').addEventListener('click', function(){
+  const box = document.getElementById('joinBox');
+  const nowOpen = box.classList.toggle('hidden') === false;
+  this.setAttribute('aria-expanded', String(nowOpen));
+});
+document.getElementById('regenNameBtn').addEventListener('click', function(){
+  if(!favColor) return;
+  myName = randomMythName(favColor);
+  renderNamePreview();
+});
+document.getElementById('createBtn').addEventListener('click', async function(){
+  if(!favAnimal){ alert('Pick your favorite animal first!'); return; }
+  if(!favColor){ alert('Pick your favorite color first!'); return; }
+  if(!myName){ myName = generateMythName(favAnimal, favColor); renderNamePreview(); }
+  myAnimal = favAnimal;
+  const btn = this;
+  btn.disabled = true; btn.textContent = 'Creating battle...';
+  try{
+    room = await createRoom();
+    await saveJSON('players', []);
+    await enterRoom();
+  }catch(e){
+    alert('Could not create a battle right now (' + e.message + '). Check your connection and try again.');
+  }
+  btn.disabled = false; btn.textContent = '🎉 Create a new battle';
+});
+document.getElementById('joinBtn').addEventListener('click', async function(){
+  const code = document.getElementById('codeInput').value.trim().replace(/[^a-zA-Z0-9_-]/g,'');
+  if(!favAnimal){ alert('Pick your favorite animal first!'); return; }
+  if(!favColor){ alert('Pick your favorite color first!'); return; }
+  if(!code){ alert('Paste the battle code!'); return; }
+  if(!myName){ myName = generateMythName(favAnimal, favColor); renderNamePreview(); }
+  myAnimal = favAnimal;
+
+  this.disabled = true;
+  const original = this.textContent;
+  this.textContent = 'Joining...';
+  const { exists, networkError } = await checkRoomExists(code);
+  this.disabled = false;
+  this.textContent = original;
+
+  if(networkError){ alert('Could not reach the battle service right now. Check your connection and try again.'); return; }
+  if(!exists){ alert('Could not find a battle with code:\n' + code + '\n\nDouble check it matches exactly what your opponent shared.'); return; }
+
+  room = code;
+  const existingPlayers = await loadJSON('players') || [];
+  if(existingPlayers.length>=2 && !existingPlayers.find(p=>p.id===myId)){
+    alert('That battle already has 2 commanders.'); return;
+  }
+  await enterRoom();
+});
+
+async function enterRoom(){
+  players = await loadJSON('players') || [];
+  if(!players.find(p=>p.id===myId)){
+    if(players.length>=2){ alert('That battle already has 2 commanders.'); return; }
+    players.push({id:myId, name:myName, score:0, animal: myAnimal});
+    await saveJSON('players', players);
+    const check = await loadJSON('players') || [];
+    if(!check.find(p=>p.id===myId)){
+      check.push({id:myId, name:myName, score:0, animal: myAnimal});
+      await saveJSON('players', check);
+      players = check;
+    } else {
+      players = check;
+    }
+  }
+  meta = await loadJSON('meta');
+  boards = await loadJSON('boards') || {};
+  ready = await loadJSON('ready') || {};
+  document.getElementById('lobbyCode').textContent = room;
+  startPolling();
+  if(meta && meta.phase){ showScreen('screen-setup'); } else { showScreen('screen-lobby'); }
+}
+
+function buildJoinLink(){
+  const url = new URL(window.location.href);
+  url.search = ''; url.hash = '';
+  url.searchParams.set('room', room);
+  return url.toString();
+}
+document.getElementById('copyLinkBtn').addEventListener('click', async function(){
+  const btn = this; const original = btn.textContent;
+  const link = buildJoinLink();
+
+  // Prefer the native share sheet (Messages, WhatsApp, Mail, etc.) where
+  // available — mainly mobile browsers. Falls back to clipboard-copy
+  // everywhere else.
+  if(navigator.share){
+    try{
+      await navigator.share({ title:'Alien Armada', text:`Join my Alien Armada battle! Battle code: ${room}`, url:link });
+      return;
+    }catch(e){
+      if(e && e.name==='AbortError') return; // they cancelled the share sheet, not an error
+    }
+  }
+
+  try{
+    if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard api');
+    await navigator.clipboard.writeText(link);
+    btn.textContent = '✅ Link copied!';
+  }catch(e){ btn.textContent = '⚠️ Could not copy — long-press the code below'; }
+  setTimeout(()=>{ btn.textContent = original; }, 2500);
+});
+document.getElementById('copyCodeBtn').addEventListener('click', async function(){
+  const btn = this; const original = btn.textContent;
+  try{
+    if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard api');
+    await navigator.clipboard.writeText(room);
+    btn.textContent = '✅ Copied!';
+  }catch(e){
+    const codeEl = document.getElementById('lobbyCode');
+    const range = document.createRange();
+    range.selectNodeContents(codeEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+    btn.textContent = '⚠️ Tap-hold the code above';
+  }
+  setTimeout(()=>{ btn.textContent = original; }, 2500);
+});
+
+document.getElementById('leaveLobbyBtn').addEventListener('click', resetToLanding);
+document.getElementById('leaveBattleBtn').addEventListener('click', resetToLanding);
+function resetToLanding(){
+  if(pollTimer) clearInterval(pollTimer);
+  room=''; meta=null; players=[]; boards={}; ready={};
+  setupInitialized=false; chargeSelection=[]; myShips=[]; currentShipIdx=0;
+  showScreen('screen-landing');
+}
+
+function renderLobbyPlayers(){
+  const el = document.getElementById('lobbyPlayers');
+  el.innerHTML = '';
+  players.forEach(p=>{
+    const row = document.createElement('div');
+    row.className='player-row';
+    row.innerHTML = `<span>${animalIconFor(p.animal)} ${escapeHtml(p.name)}${p.id===myId?' (you)':''}</span>`;
+    el.appendChild(row);
+  });
+}
+document.getElementById('startSetupBtn').addEventListener('click', async ()=>{
+  if(players.length<2){ alert('Need a second commander to join first!'); return; }
+  await saveJSON('meta', {phase:'setup', turnPlayerId:null, winnerId:null, turnCount:0});
+  await saveJSON('boards', {});
+  await saveJSON('ready', {});
+});
+
+// ============== POLLING ==============
+function startPolling(){
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(pollAll, 2000);
+  pollAll();
+}
+async function pollAll(){
+  const newPlayers = await loadJSON('players');
+  if(newPlayers) players = newPlayers;
+  const newMeta = await loadJSON('meta');
+  if(newMeta) meta = newMeta;
+  const newBoards = await loadJSON('boards');
+  if(newBoards) boards = newBoards;
+  const newReady = await loadJSON('ready');
+  if(newReady) ready = newReady;
+
+  renderLobbyPlayers();
+
+  if(!meta || !meta.phase){
+    showScreen('screen-lobby');
+    document.getElementById('startSetupBtn').classList.toggle('hidden', players.length<2);
+    return;
+  }
+
+  if(meta.phase==='setup'){
+    showScreen('screen-setup');
+    if(players.length===2){
+      const [p1,p2] = players;
+      const r1 = ready[p1.id]||{}, r2 = ready[p2.id]||{};
+      if(r1.charges && r1.fleet && r2.charges && r2.fleet){
+        await saveJSON('meta', {phase:'battle', turnPlayerId:p1.id, winnerId:null, turnCount:0});
+        return;
+      }
+    }
+    const mine = ready[myId]||{};
+    if(mine.charges && mine.fleet){
+      showSetupSub('setup-waiting');
+      const opp = opponentPlayer();
+      document.getElementById('setupWaitingText').textContent = opp
+        ? `Standing by for ${opp.name} to finish deployment...`
+        : 'Standing by for your opponent...';
+    } else if(!setupInitialized){
+      setupInitialized = true;
+      chargeSelection = []; myShips = []; currentShipIdx = 0; orientation='H';
+      buildChargeGrid();
+      showSetupSub('setup-charges');
+    }
+    return;
+  }
+
+  if(meta.phase==='battle'){
+    showScreen('screen-battle');
+    renderBattle();
+    return;
+  }
+
+  if(meta.phase==='gameOver'){
+    showScreen('screen-over');
+    renderGameOver();
+    return;
+  }
+}
+
+// ============== SETUP: DEPTH CHARGES ==============
+function buildChargeGrid(){
+  const grid = document.getElementById('chargeGrid');
+  grid.innerHTML='';
+  for(let y=0;y<N;y++){
+    for(let x=0;x<N;x++){
+      const btn = document.createElement('button');
+      btn.type='button'; btn.className='cell';
+      if(chargeSelection.some(([cx,cy])=>cx===x&&cy===y)) btn.classList.add('charge-selected');
+      btn.setAttribute('aria-label', `Target cell column ${x+1} row ${y+1}`);
+      btn.addEventListener('click', ()=>toggleCharge(x,y));
+      grid.appendChild(btn);
+    }
+  }
+  document.getElementById('chargeCount').textContent = `${chargeSelection.length} / ${MAX_CHARGES} selected`;
+  document.getElementById('confirmChargesBtn').disabled = chargeSelection.length!==MAX_CHARGES;
+}
+function toggleCharge(x,y){
+  const idx = chargeSelection.findIndex(([cx,cy])=>cx===x&&cy===y);
+  if(idx>=0) chargeSelection.splice(idx,1);
+  else if(chargeSelection.length<MAX_CHARGES) chargeSelection.push([x,y]);
+  buildChargeGrid();
+}
+document.getElementById('confirmChargesBtn').addEventListener('click', async ()=>{
+  const opp = opponentPlayer();
+  if(!opp) return;
+  const b = await loadJSON('boards') || {};
+  ensureBoardSkeleton(b, opp.id);
+  b[opp.id].charges = chargeSelection.slice();
+  await saveJSON('boards', b);
+  boards = b;
+  const r = await loadJSON('ready') || {};
+  r[myId] = Object.assign({}, r[myId], {charges:true});
+  await saveJSON('ready', r);
+  ready = r;
+  showSetupSub('setup-fleet');
+  buildFleetGrid();
+  buildShipList();
+});
+
+// ============== SETUP: FLEET ==============
+function buildShipList(){
+  const el = document.getElementById('shipList');
+  el.innerHTML='';
+  SHIP_TEMPLATE.forEach((s,i)=>{
+    const placed = myShips[i];
+    const chip = document.createElement('div');
+    chip.className = 'ship-chip' + (i===currentShipIdx && !placed ? ' active':'') + (placed?' done':'');
+    chip.innerHTML = `<span>${s.icon} ${s.name}</span><span>${s.size} cells</span>`;
+    el.appendChild(chip);
+  });
+}
+function buildFleetGrid(){
+  const grid = document.getElementById('fleetGrid');
+  grid.innerHTML='';
+  for(let y=0;y<N;y++){
+    for(let x=0;x<N;x++){
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='cell';
+      const occ = myShips.some(s=> s && s.cells.some(([sx,sy])=>sx===x&&sy===y));
+      if(occ) btn.classList.add('ship');
+      btn.setAttribute('aria-label', `Deploy cell column ${x+1} row ${y+1}`);
+      btn.addEventListener('click', ()=>attemptPlace(x,y));
+      grid.appendChild(btn);
+    }
+  }
+}
+function attemptPlace(x,y){
+  if(currentShipIdx>=SHIP_TEMPLATE.length) return;
+  const tmpl = SHIP_TEMPLATE[currentShipIdx];
+  const placedSoFar = myShips.filter(Boolean);
+  const cells = canPlace(placedSoFar, x, y, tmpl.size, orientation);
+  if(!cells) return;
+  myShips[currentShipIdx] = {name:tmpl.name, size:tmpl.size, icon:tmpl.icon, cells};
+  currentShipIdx++;
+  buildFleetGrid();
+  buildShipList();
+  if(currentShipIdx>=SHIP_TEMPLATE.length){
+    document.getElementById('confirmFleetBtn').classList.remove('hidden');
+  }
+}
+document.getElementById('rotateBtn').addEventListener('click', function(){
+  orientation = orientation==='H' ? 'V' : 'H';
+  this.textContent = '🔄 Orientation: ' + (orientation==='H'?'Horizontal':'Vertical');
+});
+document.getElementById('randomFleetBtn').addEventListener('click', ()=>{
+  myShips = randomFleet();
+  currentShipIdx = SHIP_TEMPLATE.length;
+  buildFleetGrid(); buildShipList();
+  document.getElementById('confirmFleetBtn').classList.remove('hidden');
+});
+document.getElementById('resetFleetBtn').addEventListener('click', ()=>{
+  myShips = []; currentShipIdx = 0;
+  buildFleetGrid(); buildShipList();
+  document.getElementById('confirmFleetBtn').classList.add('hidden');
+});
+document.getElementById('confirmFleetBtn').addEventListener('click', async ()=>{
+  const b = await loadJSON('boards') || {};
+  ensureBoardSkeleton(b, myId);
+  b[myId].ships = myShips.filter(Boolean);
+  await saveJSON('boards', b);
+  boards = b;
+  const r = await loadJSON('ready') || {};
+  r[myId] = Object.assign({}, r[myId], {fleet:true});
+  await saveJSON('ready', r);
+  ready = r;
+});
+
+// ============== BATTLE ==============
+function renderBattle(){
+  const opp = opponentPlayer();
+  const myBoard = boards[myId] || {ships:[],charges:[],shotsAgainst:[]};
+  const oppBoard = opp ? (boards[opp.id] || {ships:[],charges:[],shotsAgainst:[]}) : {ships:[],charges:[],shotsAgainst:[]};
+
+  const myTurn = meta.turnPlayerId===myId;
+  const banner = document.getElementById('turnBanner');
+  banner.className = 'turn-banner' + (myTurn?'':' waiting');
+  banner.textContent = myTurn ? '🎯 Your move, Commander!' : `⏳ Waiting for ${opp?opp.name:'opponent'}...`;
+
+  buildEnemyGrid(oppBoard, myTurn);
+  buildMyGrid(myBoard);
+}
+function buildEnemyGrid(oppBoard, myTurn){
+  const grid = document.getElementById('enemyGrid');
+  grid.innerHTML='';
+  const shipStatus = computeShips(oppBoard);
+  for(let y=0;y<N;y++){
+    for(let x=0;x<N;x++){
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='cell';
+      const shot = (oppBoard.shotsAgainst||[]).find(s=>s.x===x&&s.y===y);
+      const sunkShip = shipStatus.find(s=> s.sunk && s.cells.some(([sx,sy])=>sx===x&&sy===y));
+      if(sunkShip){ btn.classList.add('sunk'); btn.textContent = sunkShip.icon; }
+      else if(shot){
+        btn.classList.add(shot.result==='hit' ? 'hit':'miss');
+        btn.textContent = shot.result==='hit' ? '💥' : '🌊';
+      }
+      btn.disabled = !myTurn || !!shot || meta.phase!=='battle';
+      btn.setAttribute('aria-label', `Fire at column ${x+1} row ${y+1}`);
+      btn.addEventListener('click', ()=>fireAt(x,y));
+      grid.appendChild(btn);
+    }
+  }
+}
+function buildMyGrid(myBoard){
+  const grid = document.getElementById('myGrid');
+  grid.innerHTML='';
+  for(let y=0;y<N;y++){
+    for(let x=0;x<N;x++){
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='cell'; btn.disabled=true;
+      const hasShip = isCellShip(myBoard,x,y);
+      const direct = isCellDirectHit(myBoard,x,y);
+      const chargeHit = isCellChargeHit(myBoard,x,y);
+      const miss = isCellMiss(myBoard,x,y);
+      if(chargeHit){ btn.classList.add('charge-hit'); btn.textContent='💣'; }
+      else if(direct && hasShip){ btn.classList.add('hit'); btn.textContent='💥'; }
+      else if(hasShip){ btn.classList.add('ship'); }
+      else if(miss){ btn.classList.add('miss'); btn.textContent='🌊'; }
+      grid.appendChild(btn);
+    }
+  }
+}
+async function fireAt(x,y){
+  const opp = opponentPlayer();
+  if(!opp) return;
+  if(!meta || meta.turnPlayerId!==myId || meta.phase!=='battle') return;
+  const b = await loadJSON('boards') || {};
+  ensureBoardSkeleton(b, opp.id);
+  const already = b[opp.id].shotsAgainst.some(s=>s.x===x&&s.y===y);
+  if(already) return;
+  const hit = (b[opp.id].ships||[]).some(sh=>sh.cells.some(([sx,sy])=>sx===x&&sy===y));
+  b[opp.id].shotsAgainst.push({x,y,result: hit?'hit':'miss'});
+  await saveJSON('boards', b);
+  boards = b;
+
+  const oppShips = computeShips(b[opp.id]);
+  const allSunk = oppShips.length===SHIP_TEMPLATE.length && oppShips.every(s=>s.sunk);
+  if(allSunk){
+    await saveJSON('meta', {phase:'gameOver', turnPlayerId:null, winnerId:myId, turnCount:(meta.turnCount||0)+1});
+  } else {
+    await saveJSON('meta', {phase:'battle', turnPlayerId:opp.id, winnerId:null, turnCount:(meta.turnCount||0)+1});
+  }
+  const freshMeta = await loadJSON('meta');
+  if(freshMeta) meta = freshMeta;
+  renderBattle();
+}
+
+// ============== GAME OVER ==============
+function renderGameOver(){
+  const iWon = meta.winnerId===myId;
+  const opp = opponentPlayer();
+  document.getElementById('overTitle').textContent = iWon ? '🏆 VICTORY!' : '💥 FLEET DESTROYED';
+  document.getElementById('overSub').textContent = iWon
+    ? `You destroyed ${opp?opp.name:"their"} entire fleet!`
+    : `${opp?opp.name:'Your opponent'} destroyed your entire fleet.`;
+}
+document.getElementById('rematchBtn').addEventListener('click', async ()=>{
+  await saveJSON('boards', {});
+  await saveJSON('ready', {});
+  await saveJSON('meta', {phase:'setup', turnPlayerId:null, winnerId:null, turnCount:0});
+  setupInitialized=false; chargeSelection=[]; myShips=[]; currentShipIdx=0;
+});
+document.getElementById('newBattleBtn').addEventListener('click', resetToLanding);
+
+// ============== JOIN-VIA-LINK ==============
+/**
+ * If this page was opened via a shared join link (?room=CODE), pre-fill
+ * and reveal the join form so the player never has to type the code.
+ */
+function prefillRoomFromUrl(){
+  const params = new URLSearchParams(window.location.search);
+  const codeFromUrl = params.get('room');
+  if(!codeFromUrl) return;
+  document.getElementById('codeInput').value = codeFromUrl;
+  document.getElementById('joinBox').classList.remove('hidden');
+  document.getElementById('showJoinBtn').setAttribute('aria-expanded','true');
+  const firstAnimalBtn = document.querySelector('#favAnimalRow .animalBtn');
+  if(firstAnimalBtn) firstAnimalBtn.focus();
+}
+prefillRoomFromUrl();
+
+})(); // end IIFE
+</script>
+</body>
+</html>
