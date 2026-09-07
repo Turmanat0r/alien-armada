@@ -2,222 +2,121 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080e1b">
+<meta name="description" content="Choose your alien commander, deploy five ships, and send your rival scrambling for the escape pods.">
 <title>Alien Armada</title>
-<meta name="description" content="A free, no-signup 2-player Battleship-style game with a twist — secretly plant depth charges before deploying your fleet, then hunt each other in the dark.">
-<meta name="theme-color" content="#050914">
-<meta name="robots" content="noindex, nofollow">
-<meta property="og:title" content="Alien Armada">
-<meta property="og:description" content="Deploy your fleet, plant depth charges, hunt in the dark — free 2-player party game, no account needed.">
-<meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%91%BD%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#050914; --card:#0F1B2E; --card2:#14263F;
-    --ink:#DFFFE0; --sub:#7C93A8;
-    --acid:#7CFF6B; --danger:#FF3B5C; --warn:#FFD23F; --water:#3FA9F5;
-    --line:rgba(124,255,107,0.15);
-  }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  body{
-    margin:0;font-family:'Nunito',sans-serif;color:var(--ink);
-    background:
-      radial-gradient(circle at 20% 0%, #10243a 0%, transparent 55%),
-      radial-gradient(circle at 90% 15%, #1a1030 0%, transparent 45%),
-      var(--bg);
-    padding:14px;padding-bottom:50px;min-height:100vh;
-  }
-  .wrap{max-width:480px;margin:0 auto;}
-  h1{
-    font-family:'Orbitron',sans-serif;font-weight:800;font-size:24px;text-align:center;
-    color:var(--acid);text-shadow:0 0 12px rgba(124,255,107,0.5);margin:6px 0 2px 0;letter-spacing:1px;
-  }
-  .tagline{text-align:center;color:var(--sub);font-weight:700;font-size:12.5px;margin-bottom:16px;}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;}
-  h2{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--warn);margin:0 0 8px 0;letter-spacing:0.5px;}
-  .btn{
-    display:block;width:100%;padding:14px;border:none;border-radius:12px;
-    font-family:'Orbitron';font-weight:700;font-size:14px;color:#04140a;
-    background:var(--acid);cursor:pointer;margin-top:8px;letter-spacing:0.5px;
-  }
-  .btn-inline{width:auto;padding:8px 14px;}
-  .btn.warn{background:var(--warn);}
-  .btn.danger{background:var(--danger);color:#fff;}
-  .btn.outline{background:transparent;border:2px solid var(--line);color:var(--ink);font-family:'Nunito';font-weight:800;}
-  .btn:disabled{opacity:0.35;}
-  input[type=text]{
-    width:100%;padding:12px;border-radius:10px;border:2px solid var(--line);
-    background:var(--card2);color:var(--ink);font-weight:700;font-size:15px;
-  }
-  input[type=text]:focus{outline:2px solid var(--warn);outline-offset:1px;}
-  label{font-size:12px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:0.5px;}
-  .players{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
-  .player-row{
-    display:flex;justify-content:space-between;align-items:center;
-    background:var(--card2);border-radius:10px;padding:8px 12px;font-weight:700;
-  }
-  .player-row.turn{border:2px solid var(--acid);}
-  .hint{font-size:12.5px;color:var(--sub);line-height:1.5;margin-top:6px;}
-  .room-code{
-    font-family:'Orbitron';font-size:15px;text-align:center;letter-spacing:1px;word-break:break-all;
-    background:var(--card2);border-radius:10px;padding:10px;margin:6px 0;user-select:all;-webkit-user-select:all;
-  }
-  .center{text-align:center;}
-  .hidden{display:none;}
-  .toolrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;}
-  .colordot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0;}
-  .colordot.active{outline:3px solid var(--warn);outline-offset:2px;}
-  .animalBtn{
-    width:40px;height:40px;border-radius:10px;border:2px solid var(--line);
-    background:var(--card2);cursor:pointer;font-size:20px;padding:0;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .animalBtn.active{outline:3px solid var(--warn);outline-offset:2px;background:var(--card);}
-  #joinBox{margin-top:10px;}
-  #overTitle{font-size:20px;}
-  .grid{
-    display:grid;grid-template-columns:repeat(10,1fr);gap:2px;
-    background:var(--card2);padding:4px;border-radius:8px;margin:8px 0;
-  }
-  .cell{
-    aspect-ratio:1;border:none;border-radius:3px;background:#0A1622;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;font-size:12px;padding:0;color:var(--ink);
-  }
-  .cell.ship{background:var(--acid);}
-  .cell.charge-selected{background:var(--warn);}
-  .cell.hit{background:var(--danger);color:#fff;}
-  .cell.charge-hit{background:#7a1030;color:#fff;}
-  .cell.miss{background:var(--water);opacity:0.55;}
-  .cell.sunk{background:#3a1030;color:#fff;}
-  .cell:disabled{cursor:default;}
-  .shiplist{display:flex;flex-direction:column;gap:6px;margin:8px 0;}
-  .ship-chip{
-    display:flex;justify-content:space-between;padding:8px 10px;border-radius:8px;
-    background:var(--card2);font-weight:700;font-size:13px;border:2px solid transparent;
-  }
-  .ship-chip.active{border-color:var(--warn);}
-  .ship-chip.done{opacity:0.4;text-decoration:line-through;}
-  .turn-banner{
-    font-family:'Orbitron';text-align:center;font-size:15px;padding:10px;border-radius:10px;
-    background:var(--card2);color:var(--acid);margin-bottom:8px;letter-spacing:0.5px;
-  }
-  .turn-banner.waiting{color:var(--sub);}
-  .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--sub);margin-top:6px;}
-  .legend span{display:inline-flex;align-items:center;gap:4px;}
-  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block;}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{color-scheme:dark;--bg:#080e1b;--card:#111e30;--card2:#192940;--ink:#f0f5ff;--sub:#a3b3cd;--acid:#89e8e5;--danger:#ff906d;--warn:#efcc7a;--water:#7497b3;--violet:#b4a0ff;--line:#2b4059;--commanders:none;--ships:none;--pods:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{min-height:100%;scrollbar-gutter:stable}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 15% 0,#1b2d49 0,transparent 52%),radial-gradient(ellipse at 95% 35%,#281e431f,transparent 50%),var(--bg);font:16px/1.5 'DM Sans',system-ui,sans-serif;min-height:100vh}button,input{font:inherit}button{touch-action:manipulation;cursor:pointer}button:disabled{cursor:not-allowed;opacity:.42}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--acid);outline-offset:4px}a{color:inherit}.hidden{display:none!important}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:88px;padding:18px max(24px,calc((100vw - 1220px)/2));border-bottom:1px solid #91aece1a;background:#080e1be8;backdrop-filter:blur(15px)}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:Outfit,sans-serif;font-size:18px;font-weight:600;letter-spacing:.05em;line-height:1.25;flex:none}.brand b{color:var(--acid);font-weight:600}.brand small{display:block;color:#8c9fb9;font-size:9px;letter-spacing:.2em;margin-top:4px}.brand-orbit{display:grid;place-items:center;width:42px;height:42px;background:var(--acid);border-radius:13px 13px 13px 4px;color:#122036;font-size:28px;font-weight:800;transform:skew(-6deg)}.settings{display:flex;gap:8px}.mini-btn{border:1px solid var(--line);border-radius:10px;background:#152238;color:var(--ink);padding:9px 13px;min-height:40px;font-size:13px;font-weight:600;transition:background .15s}.mini-btn:hover{background:#243750}.mini-btn[aria-pressed=true]{color:var(--acid);border-color:#89e8e555}.wrap{max-width:1220px;margin:0 auto;padding:36px 0 44px}.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:28px}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--acid);margin:0 0 13px;display:flex;gap:9px;align-items:center}.status-dot{width:6px;height:6px;border-radius:50%;background:var(--acid);box-shadow:0 0 12px #89e8e575}h1,h2,h3{font-family:Outfit,sans-serif;line-height:1.12;margin:0;font-weight:500}h1{font-size:clamp(34px,4.4vw,55px);letter-spacing:-.035em}h1 em{font-style:normal;color:var(--acid)}h2{font-size:21px;letter-spacing:-.015em}h3{font-size:30px;letter-spacing:-.025em}.intro{color:var(--sub);font-size:14px;line-height:1.65;margin:0 0 4px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;min-width:0}.landing-layout{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(0,1fr);gap:22px}.section-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.tag{font-size:10px;letter-spacing:.12em;font-weight:700;color:#93a8c4;white-space:nowrap}.commander-lab{position:relative;overflow:hidden;background:radial-gradient(ellipse at 20% 50%,#263657 0,transparent 75%),var(--card)}.commander-stage{display:flex;align-items:center;gap:16px;min-height:248px}.portrait-frame{position:relative;flex:0 0 47%;min-width:0}.commander-art{background-image:var(--commanders);background-size:500% 200%;background-position:calc(var(--ci,0)*25%) calc(var(--mood,0)*100%);background-repeat:no-repeat;aspect-ratio:1;filter:drop-shadow(0 8px 16px #0003)}.portrait-frame>.commander-art{width:100%;min-width:0;animation:idlefloat 5s ease-in-out infinite}.portrait-caption{display:block;text-align:center;color:#728aaa;font-size:9px;letter-spacing:.2em;font-weight:700;margin-top:-8px;position:relative}.commander-bio{flex:1;min-width:0}.rank{font-size:10px;font-weight:700;letter-spacing:.13em;color:var(--acid);text-transform:uppercase}.commander-bio h3{margin:7px 0 12px;font-weight:600}.commander-bio>p{font-size:13px;line-height:1.6;color:var(--sub);margin:0}blockquote{margin:16px 0 0;color:#d9d2fa;font-size:14px;font-style:italic;line-height:1.6}.commander-picker{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:24px}.commander-choice{padding:3px 4px 9px;background:#0b1526;border:1px solid var(--line);border-radius:13px;color:var(--sub);font-size:11px;font-weight:700;min-width:0;transition:border-color .2s,transform .2s}.commander-choice .commander-art{width:100%;aspect-ratio:1}.commander-choice:hover{transform:translateY(-3px);border-color:#7c93b6}.commander-choice[aria-pressed=true]{border-color:var(--acid);background:#183348;color:var(--acid);box-shadow:inset 0 0 0 1px #89e8e545}.launch-panel{padding:28px}.launch-panel label{margin-top:26px}label{display:block;font-size:14px;font-weight:500;color:var(--sub);margin:0 0 9px}input[type=text]{width:100%;min-width:0;padding:14px 16px;min-height:52px;border:1px solid var(--line);border-radius:12px;background:#0b1525;color:var(--ink);font-size:15px}input::placeholder{color:#7f93b1}input:focus{border-color:var(--acid)}.field-hint{font-size:12px;color:var(--sub);line-height:1.5;margin:9px 0 26px}.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 18px;min-height:51px;border:1px solid transparent;border-radius:12px;color:#102133;background:var(--acid);font-size:14px;font-weight:700;transition:background .15s,transform .15s}.btn:hover:not(:disabled){background:#b1f5eb;transform:translateY(-1px)}.btn.outline{border-color:#3d526e;background:transparent;color:var(--ink)}.btn.outline:hover:not(:disabled){background:#243650}.btn.secondary{background:var(--violet);color:#191c39}.btn.danger{background:#ff906d;color:#351d26}.divider{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--sub);margin:24px 0}.divider::before,.divider::after{content:'';height:1px;flex:1;background:var(--line)}.launch-note{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:24px;font-size:12px;color:var(--sub)}.launch-note span{color:var(--acid);font-size:18px}.join-box{margin-top:18px}.join-box label{margin-top:0}.join-box .btn{margin-top:10px}.briefing-strip{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;margin-top:27px;font-size:12px;color:var(--sub)}.briefing-strip b{color:var(--acid);font-family:Outfit,sans-serif;font-weight:500;margin-right:7px}.lobby-layout{display:grid;grid-template-columns:1fr 1fr;gap:22px}.players{display:flex;flex-direction:column;gap:12px}.player-row{display:flex;align-items:center;gap:16px;background:#0c1728;border:1px solid var(--line);border-radius:16px;padding:12px 16px}.player-row .commander-art{width:78px;flex:none}.player-info{min-width:0;flex:1}.player-info strong{display:block;overflow-wrap:anywhere;font-size:18px;font-family:Outfit,sans-serif;font-weight:500}.player-info small{color:var(--sub);font-size:12px}.player-row.empty{min-height:95px;color:var(--sub);border-style:dashed;justify-content:center;font-size:13px}.room-code{padding:16px;background:#0b1525;border:1px solid var(--line);border-radius:14px;color:var(--acid);font-family:Outfit,sans-serif;font-size:19px;letter-spacing:.05em;overflow-wrap:anywhere;user-select:all;margin-bottom:16px}.two-buttons{display:flex;gap:10px;margin-bottom:16px}.two-buttons .btn{font-size:13px;padding:12px}.text-btn{border:0;padding:10px 0;background:transparent;color:var(--sub);font-size:13px;margin-top:15px}.text-btn:hover{color:var(--acid)}.hint{font-size:12px;color:var(--sub);line-height:1.55;margin:7px 0 0}.center{text-align:center}.deployment-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.85fr);gap:22px;max-width:1050px;margin:0 auto;align-items:start}.board-card{padding:24px 24px 19px}.coordinate-board{position:relative;padding:18px 0 0 18px;min-width:0}.axis-x{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));position:absolute;top:0;left:18px;right:0}.axis-y{display:grid;grid-template-rows:repeat(10,minmax(0,1fr));position:absolute;left:0;top:18px;bottom:0;width:14px}.axis-x span,.axis-y span{display:flex;align-items:center;justify-content:center;font-size:9px;color:#7d93b0;font-weight:600}.grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:1px;position:relative;isolation:isolate;aspect-ratio:1;background:#46607a47;border:1px solid #395a74;border-radius:6px;overflow:hidden}.cell{aspect-ratio:1;min-width:0;border:0;position:relative;z-index:2;padding:0;display:flex;align-items:center;justify-content:center;background:#0d1c30;color:var(--ink);font-size:13px;border-radius:0}.cell:disabled{opacity:1;cursor:default}.cell:not(:disabled):hover{background:#24475e;box-shadow:inset 0 0 0 1px var(--acid)}.cell:focus-visible{outline:2px solid var(--acid);outline-offset:-2px}.cell.ship{background:#72d6ec0a}.cell.ship:hover{background:#72d6ec17}.cell.hit,.cell.charge-hit{background:#ff906d1c;color:#ffd7b0}.cell.hit::after{content:'×';font-weight:700;font-size:22px;text-shadow:0 0 9px #ff601b}.cell.charge-hit::after{content:'◆';font-size:13px;color:var(--violet);text-shadow:0 0 9px var(--violet)}.cell.miss{background:#0e1e32}.cell.miss::after{content:'';height:5px;width:5px;background:#6f859e;border-radius:50%}.cell.sunk{background:#ff906d08}.cell.sunk::after{content:'×';font-size:16px;color:#ffaf796b}.cell.charge-selected{background:#49725b;color:#e7ffc6}.cell.charge-selected::after{content:'✦';font-size:23px;color:#dcf7a7;text-shadow:0 0 16px #c9ff73}.cell.ghost{background:#89e8e544!important}.cell.invalid{background:#ff766655!important}.ships-layer{position:absolute;inset:0;z-index:1;pointer-events:none;background:#0c1b2e}.ship-sprite{position:absolute;pointer-events:none}.ship-art{background-image:var(--ships);background-size:100% 500%;background-position:0 calc(var(--si,0)*25%);background-repeat:no-repeat;width:100%;height:100%;filter:drop-shadow(0 0 4px #67d6ed45)}.ship-sprite.vertical .ship-art{position:absolute;left:50%;top:50%;width:calc(var(--len)*100%);height:calc(100% / var(--len));transform:translate(-50%,-50%) rotate(90deg)}.ship-sprite.wreck .ship-art{filter:grayscale(.85) brightness(.48) sepia(.25);opacity:.85}.shiplist{display:flex;flex-direction:column;gap:10px}.ship-chip{border:1px solid var(--line);border-radius:13px;padding:10px 12px;background:#0d1829;display:flex;align-items:center;gap:10px}.ship-chip.active{border-color:var(--acid);background:#173042}.ship-chip.done{opacity:.62}.ship-chip .ship-art{width:98px;height:34px;flex:none}.ship-chip strong{display:block;font-size:13px;font-weight:600}.ship-chip small{font-size:11px;color:var(--sub)}.ship-chip .placed-tick{margin-left:auto;color:var(--acid)}.deployment-notes>h2{font-size:28px;margin:12px 0 16px}.deployment-notes>p{color:var(--sub);font-size:14px;line-height:1.65}.large-step{font-size:72px;font-family:Outfit,sans-serif;color:#89e8e532;line-height:1}.mine-count{font-family:Outfit,sans-serif;font-size:24px;color:var(--acid);margin:26px 0 18px}.deployment-notes>.btn{margin-top:20px}.toolrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.waiting-card{max-width:600px;margin:35px auto;text-align:center;padding:28px 36px 40px}.waiting-card .commander-art{width:220px;margin:0 auto}.waiting-card .eyebrow{justify-content:center}.waiting-card h1{font-size:40px}.waiting-card>p{color:var(--sub)}.battle-heading{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:21px}.battle-heading h1{font-size:34px}.battle-heading .eyebrow{font-size:10px;margin-bottom:7px}.turn-banner{padding:13px 20px;border:1px solid #89e8e557;background:#89e8e512;color:var(--acid);font-family:Outfit,sans-serif;font-size:18px;font-weight:500;border-radius:12px;text-align:center}.turn-banner.waiting{color:var(--sub);background:var(--card);border-color:var(--line)}.comms-bar{display:flex;align-items:center;gap:14px;min-height:76px;background:#162239;border:1px solid var(--line);border-radius:17px;padding:3px 18px 3px 6px;margin-bottom:22px}.comms-bar .commander-art{width:75px;flex:none;align-self:flex-end}.comms-bar p{font-size:14px;margin:3px 0 0;color:#e0e6f4}.comms-label{margin-left:auto;font-size:9px;letter-spacing:.14em;color:#7f95b5;white-space:nowrap}.battle-layout{display:grid;grid-template-columns:1.05fr 1fr;gap:22px;align-items:start}.enemy-card{border-color:#47718c;background:linear-gradient(145deg,#16283b,#111e30)}.sector-badge{border:1px solid #89e8e543;border-radius:7px;font-size:9px;font-weight:700;letter-spacing:.1em;padding:6px 8px;color:var(--acid)}.own-badge{border-color:#b4a0ff43;color:var(--violet)}.legend{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 0 18px;color:var(--sub);font-size:11px}.legend span{display:inline-flex;align-items:center;gap:6px}.legend-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--sub)}.hit-dot{background:var(--danger)}.miss-dot{background:#6f859e}.wreck-dot{background:#986858}.ship-dot{background:var(--acid)}.mine-dot{background:var(--violet)}.fleet-status{display:flex;flex-wrap:wrap;gap:7px;margin:17px 0 0 18px}.fleet-tag{font-size:10px;color:#9bafc8;border:1px solid #344a65;border-radius:6px;padding:4px 7px}.fleet-tag.lost{color:#eaa089;border-color:#a06a5455;text-decoration:line-through;opacity:.75}.battle-footer{display:flex;align-items:center;justify-content:space-between}.result-card{max-width:700px;text-align:center;margin:0 auto;padding:25px 40px 38px;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,#253659,transparent 75%),var(--card)}.result-art{width:235px;margin:0 auto}.result-card .eyebrow{justify-content:center}.result-card h1{font-size:46px}.result-card>p{color:var(--sub);font-size:15px}.result-card blockquote{font-size:18px;color:var(--acid);margin:20px auto;max-width:36ch}.result-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:26px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.result-stats>div{padding:16px 8px;min-width:0}.result-stats b{display:block;font:500 29px Outfit,sans-serif;color:var(--ink)}.result-stats span{font-size:11px;color:var(--sub)}.result-buttons{display:flex;gap:12px}.connection-status:not(:empty){position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:110;max-width:90%;padding:12px 20px;border:1px solid #efcc7a55;border-radius:12px;background:#302b22;color:var(--warn);font-size:13px}#fxLayer{position:fixed;inset:0;z-index:100;pointer-events:none;overflow:hidden}#fxCanvas,#escapeLayer{position:absolute;inset:0;width:100%;height:100%}.escape-pod{position:absolute;width:118px;height:118px;background-image:var(--pods);background-size:500% 100%;background-position:calc(var(--ci)*25%) 0;filter:drop-shadow(0 6px 10px #0006);animation:escape-flight 2.4s cubic-bezier(.22,.64,.45,1) forwards;transform-origin:center;will-change:transform,opacity}.escape-pod::after{content:'';position:absolute;left:37%;top:83%;width:24%;height:42%;border-radius:50%;background:radial-gradient(ellipse at top,#f4f9c5,#ff914ca6 35%,transparent 75%);z-index:-1;filter:blur(3px);animation:thruster .15s alternate infinite}.escape-pod.fizzle::after{background:radial-gradient(ellipse at top,#ead4ff,#a573ffc9 35%,transparent 75%)}#impactCallout{position:absolute;top:18%;left:50%;transform:translateX(-50%);font-family:Outfit,sans-serif;font-size:clamp(23px,4vw,48px);font-weight:800;letter-spacing:-.03em;color:#fff4d8;text-align:center;text-shadow:0 3px 20px #090b20,0 0 35px #ff7516;opacity:0;white-space:nowrap}#impactCallout.show{animation:callout 1.8s both}.battle-jolt{animation:jolt .44s ease}.comms-bar.reacting .commander-art{animation:reaction .65s ease}.calm .escape-pod{animation:escape-calm 1.7s ease-out forwards}.calm #impactCallout.show{animation:callout-calm 1.5s both}.calm .battle-jolt{animation:none}.calm .commander-art{animation:none}
+@keyframes idlefloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}@keyframes reaction{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg) scale(1.07)}60%{transform:rotate(5deg)}}@keyframes jolt{10%{transform:translate(-6px,3px)}30%{transform:translate(5px,-2px)}50%{transform:translate(-4px,-2px)}70%{transform:translate(2px,2px)}100%{transform:none}}@keyframes escape-flight{0%{transform:translate(-50%,-50%) scale(.35) rotate(-12deg);opacity:0}12%{opacity:1}40%{transform:translate(calc(-50% + var(--dx)*.3),-150px) scale(1) rotate(13deg);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),-650px) scale(.38) rotate(var(--spin));opacity:0}}@keyframes escape-calm{0%{transform:translate(-50%,-50%) scale(.7);opacity:0}30%{opacity:1}100%{transform:translate(-50%,-130%) scale(.85);opacity:0}}@keyframes thruster{from{opacity:.5;transform:scaleY(.8)}to{opacity:1;transform:scaleY(1.2)}}@keyframes callout{0%{opacity:0;transform:translateX(-50%) scale(1.4)}15%,72%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) scale(.95)}}@keyframes callout-calm{20%,75%{opacity:1}0%,100%{opacity:0}}
+@media(max-width:1270px){.wrap{padding-left:24px;padding-right:24px}.topbar{padding-left:24px;padding-right:24px}.commander-bio h3{font-size:27px}.commander-stage{min-height:220px}}@media(max-width:950px){.landing-layout{grid-template-columns:1.2fr 1fr;gap:16px}.card{padding:20px}.commander-stage{flex-direction:column;gap:4px}.portrait-frame{width:190px}.commander-bio{text-align:center}.commander-bio h3{font-size:25px;margin:5px 0 8px}.commander-bio>p{font-size:12px}.commander-bio blockquote{margin-top:9px;font-size:13px}.commander-picker{gap:5px;margin-top:19px}.commander-choice{font-size:10px}.deployment-layout{grid-template-columns:minmax(0,1.3fr) minmax(245px,1fr);gap:16px}.ship-chip .ship-art{width:70px}.battle-layout{gap:16px}.board-card{padding:18px 15px}.section-line h2{font-size:18px}.section-line .hint{font-size:11px}.briefing-strip{gap:18px}.comms-label{display:none}}
+@media(max-width:680px){.topbar{min-height:75px;padding:14px 16px;gap:12px}.brand{font-size:14px;gap:9px;letter-spacing:.02em}.brand small{font-size:7px;letter-spacing:.12em}.brand-orbit{width:34px;height:35px;font-size:24px;border-radius:10px 10px 10px 3px}.settings{gap:5px}.settings .mini-btn{font-size:10px;padding:7px 8px;min-height:34px}.wrap{padding:25px 16px 32px}.page-heading{display:block;margin-bottom:22px}.page-heading .intro{margin-top:12px;font-size:13px}.page-heading .intro br{display:none}.eyebrow{font-size:9px;letter-spacing:.14em;margin-bottom:10px}h1{font-size:38px}.landing-layout,.lobby-layout,.deployment-layout,.battle-layout{grid-template-columns:1fr;gap:16px}.card{border-radius:20px;padding:21px}.section-line{margin-bottom:16px}.section-line h2{font-size:20px}.commander-stage{flex-direction:row;gap:14px;min-height:180px}.portrait-frame{width:auto;flex:0 0 44%}.portrait-caption{font-size:7px;margin-top:0}.commander-bio{text-align:left}.commander-bio h3{font-size:25px}.commander-bio>p{font-size:12px}.commander-bio blockquote{font-size:12px;margin-top:10px}.rank{font-size:9px}.commander-picker{gap:7px;margin-top:20px}.commander-choice{font-size:10px}.launch-panel label{margin-top:22px}.briefing-strip{display:grid;grid-template-columns:1fr;gap:9px;margin:23px 10px 0}.player-row .commander-art{width:68px}.two-buttons{gap:8px}.deployment-notes>.large-step{display:none}.deployment-notes>h2{font-size:24px;margin:0 0 13px}.deployment-notes>p{font-size:13px}.deployment-layout{display:flex;flex-direction:column}.deployment-layout>.board-card{width:100%}.deployment-notes{width:100%}#setup-fleet .deployment-layout{display:grid;grid-template-columns:1fr}#setup-fleet .deployment-notes{padding:18px}.shiplist{display:grid;grid-template-columns:1fr 1fr;gap:7px}.ship-chip{gap:6px;padding:8px}.ship-chip .ship-art{width:48px;height:28px}.ship-chip strong{font-size:10px}.ship-chip small{font-size:9px}.placed-tick{font-size:10px}.mine-count{margin:16px 0 12px}.board-card{padding:19px 16px}.coordinate-board{padding-left:15px;padding-top:17px}.axis-x{left:15px}.axis-y{top:17px;width:12px}.axis-x span,.axis-y span{font-size:8px}.battle-heading{gap:12px;margin-bottom:17px}.battle-heading h1{font-size:27px}.battle-heading .eyebrow{font-size:8px}.turn-banner{font-size:14px;max-width:47%;padding:10px 12px}.comms-bar{gap:8px;padding:3px 12px 3px 2px;min-height:70px;margin-bottom:17px}.comms-bar .commander-art{width:65px}.comms-bar p{font-size:12px;line-height:1.4}.sector-badge{font-size:8px;padding:5px 7px}.legend{font-size:10px;gap:12px;margin-left:15px}.fleet-status{margin-left:15px;gap:5px}.fleet-tag{font-size:9px;padding:3px 6px}.battle-footer .hint{font-size:11px}.result-card{padding:22px}.result-art{width:210px}.result-card h1{font-size:38px}.result-card blockquote{font-size:16px}.result-buttons{flex-direction:column}.result-stats b{font-size:25px}.result-stats span{font-size:10px}.waiting-card{margin:15px auto;padding:24px}.waiting-card .commander-art{width:190px}.waiting-card h1{font-size:35px}.toolrow{gap:7px}.toolrow .mini-btn{font-size:12px}.escape-pod{width:98px;height:98px}}
+@media(max-width:380px){.wrap{padding-left:12px;padding-right:12px}.topbar{padding:12px}.brand small{display:none}.settings .mini-btn{font-size:9px;padding:7px 6px}.card{padding:17px}.commander-stage{gap:8px}.commander-bio h3{font-size:22px}.commander-bio>p{font-size:11px}.commander-bio blockquote{font-size:11px}.commander-choice{font-size:9px}.ship-chip .ship-art{width:38px}.board-card{padding:16px 12px}.sector-badge{font-size:7px}.section-line h2{font-size:18px}.battle-heading h1{font-size:24px}.turn-banner{font-size:12px}.cell.hit::after{font-size:17px}.cell.charge-hit::after{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.escape-pod{opacity:0!important}}
+
+/* Black-backed illustration atlases composite onto the command deck. */
+.commander-art,.ship-art,.escape-pod{mix-blend-mode:screen}
+.escape-pod{width:116px;height:232px}
+.ship-sprite.wreck .ship-art{mix-blend-mode:screen}
+.cell.impact-cell{box-shadow:inset 0 0 0 2px #fff2b8;background:#d684384d}
+.ship-sprite::after{content:'';position:absolute;inset:2px;border:1px solid #8be4f22e;border-radius:5px}
+.ship-sprite.wreck::after{border-color:#ff946222}
+.battle-tabs{display:none}
+#fxLayer{isolation:auto}
+@media(max-width:680px){.escape-pod{width:93px;height:160px}.battle-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}.battle-tabs .mini-btn{font-size:13px}.battle-layout[data-sector=enemy] .own-card,.battle-layout[data-sector=own] .enemy-card{display:none}}
+@media(prefers-reduced-motion:reduce){#impactCallout.show{opacity:1;animation:callout-calm 1.5s both!important}.escape-pod{opacity:0!important}}
+
+.commander-art[data-commander="zog"][data-mood="0"]{background-size:504.07125% 205.44041%;background-position:1.76322% 0.00000%;}
+.commander-art[data-commander="zog"][data-mood="1"]{background-size:504.07125% 202.81330%;background-position:1.76322% 97.01493%;}
+.escape-pod[data-commander="zog"]{background-size:478.98551% 117.48148%;background-position:0.00000% 25.42373%;}
+.commander-art[data-commander="fizzle"][data-mood="0"]{background-size:587.83383% 205.44041%;background-position:27.55474% 0.00000%;}
+.commander-art[data-commander="fizzle"][data-mood="1"]{background-size:587.83383% 202.81330%;background-position:27.55474% 97.01493%;}
+.escape-pod[data-commander="fizzle"]{background-size:530.21390% 130.00000%;background-position:25.73027% 51.91257%;}
+.commander-art[data-commander="nerp"][data-mood="0"]{background-size:572.54335% 205.44041%;background-position:50.58104% 0.00000%;}
+.commander-art[data-commander="nerp"][data-mood="1"]{background-size:572.54335% 202.81330%;background-position:50.58104% 97.01493%;}
+.escape-pod[data-commander="nerp"]{background-size:515.06494% 130.00000%;background-position:49.31164% 54.64481%;}
+.commander-art[data-commander="vexa"][data-mood="0"]{background-size:556.46067% 205.44041%;background-position:73.23077% 0.00000%;}
+.commander-art[data-commander="vexa"][data-mood="1"]{background-size:556.46067% 202.81330%;background-position:73.23077% 97.01493%;}
+.escape-pod[data-commander="vexa"]{background-size:515.06494% 123.90625%;background-position:73.40426% 42.48366%;}
+.commander-art[data-commander="bloop"][data-mood="0"]{background-size:535.40541% 205.44041%;background-position:98.44817% 0.00000%;}
+.commander-art[data-commander="bloop"][data-mood="1"]{background-size:535.40541% 202.81330%;background-position:98.44817% 97.01493%;}
+.escape-pod[data-commander="bloop"]{background-size:466.58824% 126.88000%;background-position:100.00000% 47.61905%;}
 </style>
+<style>:root{--commanders:url("artwork-package/commanders-black.png");--ships:url("artwork-package/ships-black.png");--pods:url("artwork-package/pods-black.png")}.callsign-row{display:flex;gap:8px;align-items:stretch}.callsign-row input{min-width:0;flex:1}.callsign-row .mini-btn{white-space:nowrap}.share-note{min-height:1.5em;margin:10px 0 0;text-align:center}</style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>👽 ALIEN ARMADA</h1>
-    <div class="tagline">Deploy your fleet, plant depth charges, hunt in the dark</div>
-  </header>
-  <main>
-
-  <!-- LANDING -->
-  <div id="screen-landing">
-    <div class="card">
-      <label>Your favorite animal</label>
-      <div class="toolrow" id="favAnimalRow" role="group" aria-label="Favorite animal"></div>
-      <label>Your favorite color</label>
-      <div class="toolrow" id="favColorRow" role="group" aria-label="Favorite color"></div>
-      <label>Your commander name</label>
-      <div class="room-code" id="namePreview" aria-live="polite">Pick an animal and a color first</div>
-      <div class="hint">Auto-generated from Greek &amp; Roman mythology — no real names needed. Don't like it? Roll again.</div>
-      <button type="button" class="btn outline hidden" id="regenNameBtn">🎲 Different name</button>
-      <button type="button" class="btn" id="createBtn">🎉 Create a new battle</button>
-      <button type="button" class="btn outline" id="showJoinBtn" aria-expanded="false" aria-controls="joinBox">🔗 Join a battle</button>
-      <div id="joinBox" class="hidden">
-        <label for="codeInput">Battle code</label>
-        <input type="text" id="codeInput" placeholder="Paste the code" autocomplete="off">
-        <button type="button" class="btn warn" id="joinBtn">Join Battle</button>
+<header class="topbar">
+  <a class="brand" href="#" id="brandHome" aria-label="Alien Armada home"><span class="brand-orbit" aria-hidden="true">A</span><span>ALIEN <b>ARMADA</b><small>INTERGALACTIC BAD DECISIONS</small></span></a>
+  <div class="settings"><button class="mini-btn" id="soundToggle" aria-pressed="false">Sound off</button><button class="mini-btn" id="fxToggle" aria-pressed="true">Cinema FX</button></div>
+</header>
+<main class="wrap">
+  <section id="screen-landing" aria-labelledby="landingTitle">
+    <div class="page-heading"><div><p class="eyebrow"><span class="status-dot"></span> TWO-PLAYER SPACE WARFARE</p><h1 id="landingTitle">Pick your <em>menace.</em></h1></div><p class="intro">Five ships. One rival.<br>A deeply questionable escape plan.</p></div>
+    <div class="landing-layout">
+      <div class="commander-lab card">
+        <div class="section-line"><h2>Choose your commander</h2><span class="tag">01 / CREW</span></div>
+        <div class="commander-stage" id="commanderStage">
+          <div class="portrait-frame"><div class="commander-art" id="commanderHero" role="img"></div><span class="portrait-caption">COMMANDING OFFICER</span></div>
+          <div class="commander-bio"><span class="rank" id="commanderRank"></span><h3 id="commanderName"></h3><p id="commanderBio"></p><blockquote id="commanderQuote"></blockquote></div>
+        </div>
+        <div class="commander-picker" id="commanderPicker" role="group" aria-label="Choose your commander"></div>
+      </div>
+      <div class="card launch-panel">
+        <div class="section-line"><h2>Take command</h2><span class="tag">02 / LAUNCH</span></div>
+        <label for="nameInput">Your callsign</label><div class="callsign-row"><input type="text" id="nameInput" placeholder="What should we call you?" maxlength="16" autocomplete="nickname"><button type="button" class="mini-btn" id="randomNameBtn" title="Generate an original sci-fi callsign">Randomize</button></div>
+        <p class="field-hint">Your commander brings the attitude. You bring the aim.</p>
+        <button type="button" class="btn" id="createBtn">Create a battle <span aria-hidden="true">↗</span></button>
+        <div class="divider">already have an invitation?</div>
+        <button type="button" class="btn outline" id="showJoinBtn" aria-expanded="false" aria-controls="joinBox">Join a battle</button>
+        <div id="joinBox" class="hidden join-box"><label for="codeInput">Battle code</label><input type="text" id="codeInput" placeholder="Paste your battle code" autocomplete="off" spellcheck="false"><button type="button" class="btn secondary" id="joinBtn">Join battle</button></div>
+        <div class="launch-note"><span aria-hidden="true">↔</span>Two players, on separate devices.</div>
       </div>
     </div>
-    <div class="hint">Exactly 2 players. Open this same page on both phones — one creates the battle and shares the join link, the other joins with it.</div>
-  </div>
+    <div class="briefing-strip"><span><b>01</b> Plant four secret plasma mines</span><span><b>02</b> Deploy your five ships</span><span><b>03</b> Hunt down the enemy fleet</span></div>
+  </section>
 
-  <!-- LOBBY -->
-  <div id="screen-lobby" class="hidden">
-    <div class="card center">
-      <label id="lobbyCodeLabel">Battle code — share this</label>
-      <div class="room-code" id="lobbyCode" aria-labelledby="lobbyCodeLabel">----</div>
-      <button type="button" class="btn outline" id="copyLinkBtn">📤 Send Join Link</button>
-      <button type="button" class="btn outline" id="copyCodeBtn">📋 Copy Code</button>
-      <div class="players" id="lobbyPlayers" aria-live="polite"></div>
-      <button type="button" class="btn warn hidden" id="startSetupBtn">▶️ Begin Deployment</button>
-      <div class="hint">Waiting for a second commander to join...</div>
+  <section id="screen-lobby" class="hidden" aria-labelledby="lobbyTitle">
+    <div class="page-heading"><div><p class="eyebrow">BATTLE LOBBY</p><h1 id="lobbyTitle">Assemble the <em>chaos.</em></h1></div><p class="intro">Invite one worthy rival.<br>Or someone with terrible aim.</p></div>
+    <div class="lobby-layout"><div class="card"><div class="section-line"><h2>Your commanders</h2><span class="tag">2 SEATS</span></div><div class="players" id="lobbyPlayers" aria-live="polite"></div></div>
+      <div class="card"><label id="lobbyCodeLabel">Battle invite</label><div class="room-code" id="lobbyCode">----</div><button type="button" class="btn outline" id="shareLinkBtn">Share invite link ↗</button><p class="hint center share-note" id="shareStatus" aria-live="polite">Send this link to your rival.</p><button type="button" class="btn hidden" id="startSetupBtn">Begin deployment</button><p class="hint center" id="lobbyHint">Waiting for a second commander…</p></div>
     </div>
-    <div class="hint center" id="connStatus" role="status" aria-live="polite"></div>
-    <button type="button" class="btn outline" id="leaveLobbyBtn">Leave Battle</button>
-  </div>
+    <button type="button" class="text-btn" id="leaveLobbyBtn">← Leave battle</button>
+  </section>
 
-  <!-- SETUP -->
-  <div id="screen-setup" class="hidden">
-    <div id="setup-charges" class="card hidden">
-      <h2>Step 1 — Plant 4 Depth Charges</h2>
-      <div class="hint">Secretly mark 4 cells on the enemy's territory before they've placed a single ship. If one lands on a ship later, that ship needs one less hit to destroy — but you'll never be told if it landed.</div>
-      <div class="grid" id="chargeGrid"></div>
-      <div class="center hint" id="chargeCount">0 / 4 selected</div>
-      <button type="button" class="btn warn" id="confirmChargesBtn" disabled>Confirm Charges</button>
-    </div>
-
-    <div id="setup-fleet" class="card hidden">
-      <h2>Step 2 — Deploy Your Fleet</h2>
-      <div class="toolrow">
-        <button type="button" class="btn outline btn-inline" id="rotateBtn">🔄 Orientation: Horizontal</button>
-        <button type="button" class="btn outline btn-inline" id="randomFleetBtn">🎲 Random</button>
-        <button type="button" class="btn outline btn-inline" id="resetFleetBtn">↩️ Reset</button>
-      </div>
-      <div class="shiplist" id="shipList"></div>
-      <div class="grid" id="fleetGrid"></div>
-      <button type="button" class="btn warn hidden" id="confirmFleetBtn">Ready for Battle</button>
-    </div>
-
-    <div id="setup-waiting" class="card hidden center">
-      <div id="setupWaitingText">Standing by for your opponent to finish deployment...</div>
-    </div>
-  </div>
-
-  <!-- BATTLE -->
-  <div id="screen-battle" class="hidden">
-    <div class="turn-banner" id="turnBanner"></div>
-    <div class="card">
-      <h2>🛰️ Enemy Waters — tap to fire</h2>
-      <div class="grid" id="enemyGrid"></div>
-      <div class="legend">
-        <span><span class="swatch" style="background:var(--danger);"></span>Hit</span>
-        <span><span class="swatch" style="background:var(--water);opacity:.55;"></span>Miss</span>
-        <span><span class="swatch" style="background:#3a1030;"></span>Sunk</span>
+  <section id="screen-setup" class="hidden" aria-label="Fleet deployment">
+    <div id="setup-charges" class="hidden">
+      <div class="page-heading"><div><p class="eyebrow">DEPLOYMENT / 01</p><h1>Leave a little <em>surprise.</em></h1></div><p class="intro">Plant four plasma mines in the enemy sector.<br>Any ship they catch will start with hidden damage.</p></div>
+      <div class="deployment-layout"><div class="card board-card"><div class="section-line"><h2>Enemy sector</h2><span class="tag">SECRET PLACEMENT</span></div><div class="coordinate-board"><div class="axis-x" aria-hidden="true"></div><div class="axis-y" aria-hidden="true"></div><div class="grid" id="chargeGrid"></div></div></div>
+        <aside class="card deployment-notes"><span class="large-step">01</span><h2>Plasma mines</h2><p>Choose four cells. If a mine overlaps a ship, that ship needs one less direct hit to destroy.</p><p class="hint">You won't be told which mines connected. The enemy fleet stays hidden until you find it.</p><div class="mine-count" id="chargeCount">0 / 4 selected</div><button type="button" class="btn" id="confirmChargesBtn" disabled>Arm the mines</button></aside>
       </div>
     </div>
-    <div class="card">
-      <h2>🚀 Your Fleet</h2>
-      <div class="grid" id="myGrid"></div>
-      <div class="legend">
-        <span><span class="swatch" style="background:var(--acid);"></span>Ship</span>
-        <span><span class="swatch" style="background:var(--danger);"></span>Hit</span>
-        <span><span class="swatch" style="background:#7a1030;"></span>💣 Depth charge (secret)</span>
+    <div id="setup-fleet" class="hidden">
+      <div class="page-heading"><div><p class="eyebrow">DEPLOYMENT / 02</p><h1>Park the <em>mothership.</em></h1></div><p class="intro">Tap a square to place your next ship.<br>Rotate it, or let fate arrange the fleet.</p></div>
+      <div class="deployment-layout"><div class="card board-card"><div class="section-line"><h2>Your sector</h2><span class="tag" id="deploymentStatus">DEPLOYING</span></div><div class="coordinate-board"><div class="axis-x" aria-hidden="true"></div><div class="axis-y" aria-hidden="true"></div><div class="grid" id="fleetGrid"></div></div><div class="toolrow"><button type="button" class="mini-btn" id="rotateBtn">↻ Horizontal</button><button type="button" class="mini-btn" id="randomFleetBtn">Shuffle fleet</button><button type="button" class="mini-btn" id="resetFleetBtn">Reset</button></div><p class="hint" id="placementHint" role="status">Select the starting square for your Mothership.</p></div>
+        <aside class="card deployment-notes"><div class="section-line"><h2>The fleet</h2><span class="tag">5 SHIPS</span></div><div class="shiplist" id="shipList"></div><button type="button" class="btn hidden" id="confirmFleetBtn">Ready for battle</button></aside>
       </div>
     </div>
-    <button type="button" class="btn outline" id="leaveBattleBtn">Leave Battle</button>
-  </div>
+    <div id="setup-waiting" class="card hidden waiting-card"><div class="commander-art" id="waitingPortrait" role="img"></div><p class="eyebrow">ENGINES WARM. EGO WARMER.</p><h1>Standing by.</h1><p id="setupWaitingText">Waiting for your opponent to finish deployment…</p><p class="hint">The escape pods are… probably working.</p></div>
+  </section>
 
-  <!-- GAME OVER -->
-  <div id="screen-over" class="hidden">
-    <div class="card center">
-      <h1 id="overTitle"></h1>
-      <div class="hint" id="overSub"></div>
-      <button type="button" class="btn warn" id="rematchBtn">🔄 Rematch</button>
-      <button type="button" class="btn outline" id="newBattleBtn">🏠 New Battle</button>
+  <section id="screen-battle" class="hidden" aria-label="Battle command deck">
+    <div class="battle-heading"><div><p class="eyebrow">LIVE ENGAGEMENT</p><h1>Command <em>deck.</em></h1></div><div class="turn-banner" id="turnBanner" role="status"></div></div>
+    <div class="comms-bar" id="commsBar"><div class="commander-art" id="commsPortrait" role="img"></div><div><span class="rank" id="commsName"></span><p id="commsText" aria-live="polite">Weapons ready.</p></div><span class="comms-label">CREW COMMS</span></div>
+    <div class="battle-tabs" role="group" aria-label="Visible sector"><button class="mini-btn" id="enemyTab" aria-pressed="true">Enemy sector</button><button class="mini-btn" id="ownTab" aria-pressed="false">Your fleet</button></div>
+    <div class="battle-layout" id="battleBoards" data-sector="enemy">
+      <div class="card board-card enemy-card"><div class="section-line"><div><h2>Enemy sector</h2><p class="hint" id="targetHint">Choose a coordinate. Make it count.</p></div><span class="sector-badge">TARGETING</span></div><div class="coordinate-board"><div class="axis-x" aria-hidden="true"></div><div class="axis-y" aria-hidden="true"></div><div class="grid" id="enemyGrid"></div></div><div class="legend"><span><i class="legend-dot hit-dot"></i>Hit</span><span><i class="legend-dot miss-dot"></i>Miss</span><span><i class="legend-dot wreck-dot"></i>Destroyed</span></div><div id="enemyFleetStatus" class="fleet-status"></div></div>
+      <div class="card board-card own-card"><div class="section-line"><div><h2>Your fleet</h2><p class="hint" id="fleetHint">Keep the escape pods on standby.</p></div><span class="sector-badge own-badge">DEFENSE</span></div><div class="coordinate-board"><div class="axis-x" aria-hidden="true"></div><div class="axis-y" aria-hidden="true"></div><div class="grid" id="myGrid"></div></div><div class="legend"><span><i class="legend-dot ship-dot"></i>Your ship</span><span><i class="legend-dot hit-dot"></i>Damage</span><span><i class="legend-dot mine-dot"></i>Mine damage</span></div><div id="ownFleetStatus" class="fleet-status"></div></div>
     </div>
-  </div>
-  </main>
-</div>
+    <div class="battle-footer"><button type="button" class="text-btn" id="leaveBattleBtn">← Leave battle</button><span class="hint" id="battleCount">Round underway</span></div>
+  </section>
 
+  <section id="screen-over" class="hidden" aria-labelledby="overTitle"><div class="card result-card"><div class="result-art commander-art" id="resultPortrait" role="img"></div><p class="eyebrow" id="overEyebrow">AFTER-ACTION REPORT</p><h1 id="overTitle"></h1><p id="overSub"></p><blockquote id="overQuote"></blockquote><div class="result-stats" id="resultStats"></div><div class="result-buttons"><button type="button" class="btn" id="rematchBtn">One more battle ↗</button><button type="button" class="btn outline" id="newBattleBtn">Back to command</button></div></div></section>
+</main>
+<div id="connStatus" class="connection-status" role="status" aria-live="polite"></div>
+<div id="fxLayer" aria-hidden="true"><canvas id="fxCanvas"></canvas><div id="escapeLayer"></div><div id="impactCallout"></div></div>
 <script>
 (function(){
 'use strict';
@@ -234,132 +133,204 @@ const SHIP_TEMPLATE = [
 const MAX_CHARGES = 4;
 const API_BASE = '/api/room';
 
-// ============== PLAYER NAME (favorite animal + color -> mythology name) ==============
-// Purely a per-viewer display identity — favorite animal picks a real
-// Greek/Roman mythology name (never a fantasy mashup, never a real
-// person's name); favorite color picks which themed pool it comes from.
-// Same animal + color always gives the same name.
-const FAVORITE_ANIMALS = [
-  {name:'Lion', icon:'🦁'}, {name:'Wolf', icon:'🐺'}, {name:'Eagle', icon:'🦅'}, {name:'Owl', icon:'🦉'},
-  {name:'Dolphin', icon:'🐬'}, {name:'Fox', icon:'🦊'}, {name:'Bear', icon:'🐻'}, {name:'Serpent', icon:'🐍'},
+// Commander identities are cosmetic; transport identity remains the player ID.
+const COMMANDERS = [
+  {id:'zog', name:'Admiral Zog', short:'Zog', rank:'Self-appointed supreme admiral', bio:'A magnificent ego. A questionable plan. Every medal is self-awarded.', intro:'I have conquered entire galaxies. Allegedly.', hit:['Precision. Brilliance. Me.','Put that one on my medal application.','Their ship was obstructing my greatness.'], miss:['A warning shot. Obviously.','Space moved. I saw it.','That sector has been thoroughly intimidated.'], hurt:['Who authorized damage to MY fleet?','That was imported hull plating!'], sunk:['A strategic departure!','The admiral is relocating his excellence.'], victory:'Another victory for my extremely convincing leadership.', defeat:'I was conducting an escape-pod inspection.'},
+  {id:'fizzle', name:'Dr. Fizzle', short:'Fizzle', rank:'Chief of questionable experiments', bio:'Loves science. Loves explosions. Sometimes remembers which ship is his.', intro:'The reactor is either stable or VERY exciting.', hit:['Excellent! An unscheduled experiment!','Beautiful combustion. Take notes!','Now THAT is peer-reviewed destruction.'], miss:['Negative results are still results!','I have discovered more space.','The laser requires a larger laser.'], hurt:['Ooh! We should measure that!','A small setback for science. A big one for the hull.'], sunk:['Reverse thrusters! Wait—which way is reverse?','The escape pod is still technically a prototype.'], victory:'My hypothesis: I am spectacular. Confirmed.', defeat:'I prefer the term explosive field research.'},
+  {id:'nerp', name:'Captain Nerp', short:'Nerp', rank:'Acting captain. Actively worried.', bio:'Brave on paper. Already wearing a life jacket. The cow is emotional support.', intro:'The safety briefing mentioned winning, right?', hit:['I did that? On PURPOSE?','Oh! Sorry! I mean—excellent!','Please tell the cow we are doing well.'], miss:['At least nobody got hurt. Yet.','A very peaceful shot.','Can we aim at something less intimidating?'], hurt:['Where is the emergency emergency exit?','The cow would like to file a complaint.'], sunk:['I packed three parachutes. In space.','Save the cow! Also me! Mostly both!'], victory:'We survived! I mean, that was the plan!', defeat:'The cow and I have elected to leave.'},
+  {id:'vexa', name:'Empress Vexa', short:'Vexa', rank:'Her interstellar inconvenience', bio:'Impeccable taste. Impossibly high standards. Deeply offended by losing.', intro:'You may begin when the lighting flatters me.', hit:['A tasteful amount of devastation.','Their fleet needed a redesign.','Send them my regards. And an invoice.'], miss:['I disliked that patch of space anyway.','My targeting assistant is now unemployed.','How aesthetically disappointing.'], hurt:['That was a limited-edition cruiser.','Someone is paying for the upholstery.'], sunk:['My drink, please. We are leaving.','I refuse to explode in this lighting.'], victory:'Conquest suits me. Everything does.', defeat:'I have more important galaxies to attend.'},
+  {id:'bloop', name:'Unit Bloop', short:'Bloop', rank:'Certified enthusiastic menace', bio:'No strategy. No regrets. Just an alarming number of teeth and a very big button.', intro:'Can I press the big button? Can I? CAN I?', hit:['BOOP! There goes the expensive bit!','Again! Again! Again!','That one made the best noise!'], miss:['I shot the nothing!','Space is very good at dodging.','The button still worked. I checked.'], hurt:['Our ship does fireworks too?!','Uh-oh. That was the snack room.'], sunk:['Wheeeee! Free spaceship ride!','Bye, ship! You were crunchy!'], victory:'I won the exploding game!', defeat:'Best. Field trip. Ever.'}
 ];
-const FAVORITE_COLORS = [
-  {name:'Red', hex:'#E63946'}, {name:'Orange', hex:'#F4A300'}, {name:'Yellow', hex:'#FFD400'}, {name:'Green', hex:'#2ECC71'},
-  {name:'Blue', hex:'#3FA9F5'}, {name:'Purple', hex:'#9B5DE5'}, {name:'Pink', hex:'#FF6FB5'}, {name:'Black', hex:'#2B2B2B'},
-];
-const MYTH_NAMES = {
-  Red: ['Ares','Mars','Vulcan','Hephaestus','Nike','Achilles','Ajax','Hector','Pyrrha','Perseus','Theseus','Cerberus','Priam','Menelaus'],
-  Orange: ['Apollo','Helios','Aurora','Eos','Demeter','Ceres','Phaeton','Icarus','Prometheus','Midas','Flora','Pomona','Vertumnus','Hyperion'],
-  Yellow: ['Athena','Minerva','Hermes','Mercury','Hebe','Tyche','Fortuna','Castor','Pollux','Janus','Fides','Concordia','Nestor','Orpheus'],
-  Green: ['Gaia','Pan','Rhea','Cronus','Terminus','Persephone','Proserpina','Dionysus','Bacchus','Echo','Narcissus','Daedalus','Atalanta','Europa'],
-  Blue: ['Poseidon','Neptune','Zeus','Jupiter','Oceanus','Tethys','Iris','Uranus','Calypso','Ariadne','Circe','Jason','Triton','Nyx'],
-  Purple: ['Hades','Pluto','Hecate','Nemesis','Morpheus','Hypnos','Thanatos','Erebus','Chaos','Medusa','Cassandra','Andromeda','Psyche','Sisyphus'],
-  Pink: ['Aphrodite','Venus','Eros','Cupid','Amor','Hestia','Vesta','Helen','Paris','Adonis','Pygmalion','Galatea','Selene','Luna'],
-  Black: ['Tantalus','Odysseus','Ulysses','Bellerophon','Deucalion','Charon','Styx','Orion','Momus','Harmonia','Cadmus','Argus','Chiron','Sibyl'],
-};
-let favAnimal = null, favColor = null;
-/**
- * Deterministically derives a display name from a favorite animal + color —
- * a real Greek/Roman mythology name (e.g. "Athena", "Triton"), never a
- * fantasy mashup and never a real person's name. Same animal + color
- * always gives the same name.
- *
- * Color picks which themed pool of 14 names to use; the animal's own
- * position in FAVORITE_ANIMALS (0-7) picks which of the first 8 names in
- * that pool you get. Using the animal's index directly — rather than
- * hashing the animal/color strings together — guarantees every animal
- * maps to a distinct name within a given color's pool; a string hash
- * over only 8 possible animal values collided far too often in testing
- * (e.g. two different animals both landing on "Zeus" for Blue).
- * @param {string|null} animalName
- * @param {string|null} colorName
- * @returns {string|null}
- */
-function generateMythName(animalName, colorName){
-  const pool = colorName && MYTH_NAMES[colorName];
-  const animalIdx = FAVORITE_ANIMALS.findIndex(a=>a.name===animalName);
-  if(animalIdx===-1 || !pool) return null;
-  return pool[animalIdx];
+const $ = id => document.getElementById(id);
+function setting(key,fallback){ try{return localStorage.getItem(key) ?? fallback;}catch(e){return fallback;} }
+function saveSetting(key,value){ try{localStorage.setItem(key,String(value));}catch(e){} }
+function profile(id){ return COMMANDERS.find(c=>c.id===id) || COMMANDERS[0]; }
+// Identity must survive a reload, or refreshing mid-battle reads as a third
+// player and the room rejects you from your own game.
+function persistentId(){
+  let id = setting('aa_id','');
+  if(!id){ id = Math.random().toString(36).slice(2,9); saveSetting('aa_id',id); }
+  return id;
 }
-/**
- * Picks a fresh random name from within the chosen color's pool — used by
- * the "Different name" reroll button.
- * @param {string} colorName
- * @returns {string|null}
- */
-function randomMythName(colorName){
-  const pool = colorName && MYTH_NAMES[colorName];
-  if(!pool) return null;
-  return pool[Math.floor(Math.random()*pool.length)];
+function commanderFor(p){ return profile(p && p.commander); }
+function portrait(el,id,mood=0){ if(!el)return;const c=profile(id);el.dataset.commander=c.id;el.dataset.mood=String(mood);el.style.setProperty('--ci',COMMANDERS.indexOf(c));el.style.setProperty('--mood',mood);el.setAttribute('aria-label',c.name+(mood?' looking alarmed':'')); }
+function commanderBadgeHtml(p){ const c=commanderFor(p);return `<div class="commander-art" data-commander="${c.id}" data-mood="0" role="img" aria-label="${c.name}"></div>`; }
+function chooseCommander(id){
+  myCommander=profile(id).id;saveSetting('aa_commander',myCommander);const c=profile(myCommander);
+  portrait($('commanderHero'),c.id);$('commanderName').textContent=c.name;$('commanderRank').textContent=c.rank;$('commanderBio').textContent=c.bio;$('commanderQuote').textContent='“'+c.intro+'”';
+  $('commanderPicker').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.commander===c.id)));
+  portrait($('waitingPortrait'),c.id);
 }
-/** Recomputes myName from the current animal + color selections, if both are set. */
-function updateGeneratedName(){
-  myName = generateMythName(favAnimal, favColor);
-  renderNamePreview();
+function initPresentation(){
+  COMMANDERS.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='commander-choice';b.dataset.commander=c.id;b.setAttribute('aria-label',`Choose ${c.name}`);b.innerHTML=`<div class="commander-art" data-commander="${c.id}" data-mood="0" aria-hidden="true"></div><span>${c.short}</span>`;b.onclick=()=>chooseCommander(c.id);$('commanderPicker').appendChild(b);});
+  chooseCommander(myCommander);$('nameInput').value=setting('aa_name','');
+  document.querySelectorAll('.axis-x').forEach(el=>{el.innerHTML='ABCDEFGHIJ'.split('').map(c=>`<span>${c}</span>`).join('');});
+  document.querySelectorAll('.axis-y').forEach(el=>{el.innerHTML=Array.from({length:10},(_,i)=>`<span>${i+1}</span>`).join('');});
+  $('brandHome').onclick=e=>{e.preventDefault();if(!room)showScreen('screen-landing');};
+  $('soundToggle').onclick=()=>{soundOn=!soundOn;saveSetting('aa_sound',soundOn);updatePreferences();if(soundOn){ensureAudio();playSound('ready');}};
+  $('fxToggle').onclick=()=>{cinema=!cinema;saveSetting('aa_cinema',cinema);updatePreferences();};
+  $('enemyTab').onclick=()=>{sectorSelection++;activateSector('enemy');};$('ownTab').onclick=()=>{sectorSelection++;activateSector('own');};
+  updatePreferences();
 }
-/** Reflects the current `myName` value (or a placeholder) in the landing UI. */
-function renderNamePreview(){
-  const el = document.getElementById('namePreview');
-  const btn = document.getElementById('regenNameBtn');
-  if(myName){
-    el.textContent = myName;
-    btn.classList.remove('hidden');
-  } else {
-    el.textContent = 'Pick an animal and a color first';
-    btn.classList.add('hidden');
+
+// Sprite rectangles are measured from the artwork; aspect ratios stay correct.
+const SHIP_RECTS = [[45, 18, 1036, 326], [52, 350, 1028, 261], [92, 618, 878, 279], [94, 907, 890, 205], [232, 1118, 486, 254]];
+const SHIP_ATLAS_SIZE = [1122,1402];
+function shipIndex(ship){return Math.max(0,SHIP_TEMPLATE.findIndex(s=>s.name===ship.name));}
+function shipStyle(el,index){
+  const [x,y,w,h]=SHIP_RECTS[index];const [aw,ah]=SHIP_ATLAS_SIZE;
+  el.style.backgroundSize=`${aw/w*100}% ${ah/h*100}%`;
+  el.style.backgroundPosition=`${aw===w?0:x/(aw-w)*100}% ${ah===h?0:y/(ah-h)*100}%`;
+}
+function addShipLayer(grid,ships){
+  const layer=document.createElement('div');layer.className='ships-layer';layer.setAttribute('aria-hidden','true');
+  ships.forEach(ship=>{
+    if(!ship.cells || !ship.cells.length)return;
+    const x=Math.min(...ship.cells.map(c=>c[0])),y=Math.min(...ship.cells.map(c=>c[1]));
+    const vertical=ship.cells.length>1 && ship.cells[0][0]===ship.cells[1][0];
+    const el=document.createElement('div');el.className='ship-sprite'+(vertical?' vertical':'')+(ship.sunk?' wreck':'');
+    el.style.left=x*10+'%';el.style.top=y*10+'%';el.style.width=(vertical?10:ship.cells.length*10)+'%';el.style.height=(vertical?ship.cells.length*10:10)+'%';el.style.setProperty('--len',ship.cells.length);
+    const art=document.createElement('div');art.className='ship-art';const index=shipIndex(ship),rect=SHIP_RECTS[index],ratio=rect[2]/rect[3],len=ship.cells.length;
+    const fitW=Math.min(1,ratio/len),fitH=Math.min(1,len/ratio);
+    art.style.position='absolute';art.style.left='50%';art.style.top='50%';art.style.width=(vertical?len*fitW:fitW)*100+'%';art.style.height=(vertical?fitH/len:fitH)*100+'%';art.style.transform='translate(-50%,-50%)'+(vertical?' rotate(90deg)':'');
+    shipStyle(art,index);el.appendChild(art);layer.appendChild(el);
+  });grid.appendChild(layer);
+}
+function makeCell(x,y,label){const b=document.createElement('button');b.type='button';b.className='cell';b.dataset.x=x;b.dataset.y=y;b.setAttribute('aria-label',`${String.fromCharCode(65+x)}${y+1}: ${label}`);return b;}
+function focusCoordinate(grid){const a=document.activeElement;return a && a.parentElement===grid ? [a.dataset.x,a.dataset.y] : null;}
+function restoreCoordinate(grid,pos){if(!pos)return;const el=Array.from(grid.querySelectorAll('.cell')).find(c=>c.dataset.x===pos[0]&&c.dataset.y===pos[1]&&!c.disabled);if(el)el.focus({preventScroll:true});}
+function renderFleetStatus(id,board,enemy){
+  const status=computeShips(board);$(id).innerHTML=SHIP_TEMPLATE.map(t=>{const ship=status.find(s=>s.name===t.name);const lost=!!(ship&&ship.sunk);return `<span class="fleet-tag${lost?' lost':''}" aria-label="${t.name}: ${lost?'destroyed':enemy?'not yet destroyed':'active'}">${t.name}</span>`;}).join('');
+}
+function previewPlacement(x,y){
+  const tmpl=SHIP_TEMPLATE[currentShipIdx];if(!tmpl)return;
+  const cells=canPlace(myShips.filter(Boolean),x,y,tmpl.size,orientation);const intended=cells||Array.from({length:tmpl.size},(_,i)=>[x+(orientation==='H'?i:0),y+(orientation==='V'?i:0)]);
+  $('fleetGrid').querySelectorAll('.cell').forEach(el=>{el.classList.remove('ghost','invalid');if(intended.some(c=>c[0]===Number(el.dataset.x)&&c[1]===Number(el.dataset.y)))el.classList.add(cells?'ghost':'invalid');});
+}
+function clearPlacementPreview(){$('fleetGrid').querySelectorAll('.cell').forEach(el=>el.classList.remove('ghost','invalid'));}
+function speak(kind,enemy=false){
+  const p=enemy?opponentPlayer():players.find(p=>p.id===myId);const c=p?commanderFor(p):profile(myCommander);
+  const choices=c[kind]||c.intro;const text=Array.isArray(choices)?choices[Math.floor(Math.random()*choices.length)]:choices;
+  portrait($('commsPortrait'),c.id,['hurt','sunk','defeat'].includes(kind)?1:0);$('commsName').textContent=c.name+(enemy?' · enemy comms':'');$('commsText').textContent='“'+text+'”';
+  $('commsBar').classList.remove('reacting');void $('commsBar').offsetWidth;$('commsBar').classList.add('reacting');
+}
+
+// Effects are derived from new confirmed direct shots, never from secret mines.
+let observedShots=new Set(), effectRound='', effectPrimed=false, endScreenAt=0, endScreenTimer=null;
+let lastBattleRender='', lastPhase='', firing=false, polling=false, lifecycle=0;
+let sectorSelection=0, keyboardTarget=null, wasMyTurn=false, pendingAdvance=null;
+function activateSector(sector){$('battleBoards').dataset.sector=sector;$('enemyTab').setAttribute('aria-pressed',String(sector==='enemy'));$('ownTab').setAttribute('aria-pressed',String(sector==='own'));}
+function shotKey(pid,s){return `${effectRound}|${pid}|${s.x},${s.y}`;}
+function resetPresentation(){
+  lifecycle++;observedShots.clear();effectPrimed=false;effectRound='';endScreenAt=0;lastBattleRender='';lastPhase='';keyboardTarget=null;wasMyTurn=false;pendingAdvance=null;activateSector('enemy');if(endScreenTimer)clearTimeout(endScreenTimer);endScreenTimer=null;
+  clearEffects();
+}
+function primeShotLedger(){
+  effectRound=(meta && meta.roundId)||room;
+  Object.entries(boards).forEach(([pid,b])=>(b.shotsAgainst||[]).forEach(s=>observedShots.add(shotKey(pid,s))));effectPrimed=true;
+}
+function observeShots(){
+  const round=(meta&&meta.roundId)||room;
+  if(effectRound && round!==effectRound){observedShots.clear();effectPrimed=true;endScreenAt=0;lastBattleRender='';}
+  effectRound=round;
+  if(!effectPrimed){primeShotLedger();return [];}
+  const events=[];
+  Object.entries(boards).forEach(([pid,b])=>{
+    (b.shotsAgainst||[]).forEach((shot,i)=>{
+      const key=shotKey(pid,shot);if(observedShots.has(key))return;observedShots.add(key);
+      const before=computeShips({...b,shotsAgainst:b.shotsAgainst.slice(0,i)});
+      const after=computeShips({...b,shotsAgainst:b.shotsAgainst.slice(0,i+1)});
+      const destroyed=after.find(s=>s.sunk && !before.some(p=>p.name===s.name&&p.sunk));
+      events.push({pid,shot,destroyed,final:!!(destroyed && after.length===5 && after.every(s=>s.sunk))});
+    });
+  });return events;
+}
+function presentCombat(){
+  const events=observeShots();const now=Date.now();
+  if(events.some(e=>e.final))endScreenAt=now+(cinema?3300:1900)+Math.max(0,events.length-1)*240;
+  if(meta.phase==='gameOver' && now>=endScreenAt){showScreen('screen-over');renderGameOver();return;}
+  showScreen('screen-battle');renderBattle();
+  const generation=lifecycle;events.forEach((event,i)=>later(()=>{if(generation===lifecycle)animateShot(event);},i*240));
+  if(meta.phase==='gameOver'){
+    if(endScreenTimer)clearTimeout(endScreenTimer);
+    endScreenTimer=setTimeout(()=>{if(generation===lifecycle && meta && meta.phase==='gameOver'){showScreen('screen-over');renderGameOver();}},Math.max(0,endScreenAt-now));
   }
 }
-/** Builds the favorite-animal button row on the landing screen. */
-function buildFavAnimalRow(){
-  const row = document.getElementById('favAnimalRow');
-  FAVORITE_ANIMALS.forEach(a=>{
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'animalBtn';
-    btn.textContent = a.icon;
-    btn.setAttribute('aria-label', 'Favorite animal ' + a.name);
-    btn.setAttribute('aria-pressed', 'false');
-    btn.addEventListener('click', ()=>{
-      favAnimal = a.name;
-      document.querySelectorAll('#favAnimalRow .animalBtn').forEach(d=>{
-        d.classList.remove('active');
-        d.setAttribute('aria-pressed','false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-pressed','true');
-      updateGeneratedName();
-    });
-    row.appendChild(btn);
-  });
+
+let cinema=setting('aa_cinema','true')==='true', soundOn=setting('aa_sound','false')==='true';
+const reducedMotion=!!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+if(reducedMotion)cinema=false;
+function updatePreferences(){if(reducedMotion)cinema=false;document.body.classList.toggle('calm',!cinema);$('soundToggle').textContent=soundOn?'Sound on':'Sound off';$('soundToggle').setAttribute('aria-pressed',String(soundOn));$('fxToggle').textContent=cinema?'Cinema FX':'Calm FX';$('fxToggle').setAttribute('aria-pressed',String(cinema));}
+let audioContext=null;
+function ensureAudio(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!audioContext)audioContext=new C();if(audioContext.state==='suspended')audioContext.resume();return audioContext;}catch(e){return null;}}
+function playSound(kind){
+  if(!soundOn)return;const a=ensureAudio();if(!a)return;
+  const t=a.currentTime,g=a.createGain();g.connect(a.destination);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(kind==='destroy'?.18:.09,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+(kind==='destroy'?1.3:.48));
+  const o=a.createOscillator();o.type=kind==='miss'?'sine':'sawtooth';o.frequency.setValueAtTime(kind==='ready'?520:kind==='destroy'?135:kind==='laser'?950:260,t);o.frequency.exponentialRampToValueAtTime(kind==='ready'?780:35,t+.42);o.connect(g);o.start(t);o.stop(t+.55);
+  if(kind==='hit'||kind==='destroy'){
+    const length=kind==='destroy'?1.5:.65,buffer=a.createBuffer(1,Math.floor(a.sampleRate*length),a.sampleRate),d=buffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
+    const n=a.createBufferSource();n.buffer=buffer;const f=a.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(2200,t);f.frequency.exponentialRampToValueAtTime(80,t+length);n.connect(f);f.connect(g);n.start(t);n.stop(t+length);
+  }
 }
-/** Builds the favorite-color swatch picker on the landing screen. */
-function buildFavColorRow(){
-  const row = document.getElementById('favColorRow');
-  FAVORITE_COLORS.forEach(c=>{
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'colordot';
-    dot.style.background = c.hex;
-    dot.setAttribute('aria-label', 'Favorite color ' + c.name);
-    dot.setAttribute('aria-pressed', 'false');
-    dot.addEventListener('click', ()=>{
-      favColor = c.name;
-      document.querySelectorAll('#favColorRow .colordot').forEach(d=>{
-        d.classList.remove('active');
-        d.setAttribute('aria-pressed','false');
-      });
-      dot.classList.add('active');
-      dot.setAttribute('aria-pressed','true');
-      updateGeneratedName();
-    });
-    row.appendChild(dot);
-  });
+let particles=[], shockwaves=[], flashes=[], streaks=[], animationFrame=0, lastFrame=0, slowUntil=0, fxTimers=new Set();
+function later(fn,ms){const id=setTimeout(()=>{fxTimers.delete(id);fn();},ms);fxTimers.add(id);return id;}
+function clearEffects(){fxTimers.forEach(clearTimeout);fxTimers.clear();particles=[];shockwaves=[];flashes=[];streaks=[];slowUntil=0;if(animationFrame)cancelAnimationFrame(animationFrame);animationFrame=0;$('escapeLayer').innerHTML='';$('impactCallout').classList.remove('show');const c=$('fxCanvas'),ctx=c.getContext('2d');if(ctx)ctx.clearRect(0,0,c.width,c.height);}
+function canvasReady(){const c=$('fxCanvas'),ratio=Math.min(window.devicePixelRatio||1,2),w=window.innerWidth,h=window.innerHeight;if(c.width!==Math.round(w*ratio)||c.height!==Math.round(h*ratio)){c.width=Math.round(w*ratio);c.height=Math.round(h*ratio);}const ctx=c.getContext('2d');if(ctx)ctx.setTransform(ratio,0,0,ratio,0,0);return ctx;}
+function burst(x,y,power=1){
+  if(!cinema)return;
+  const count=Math.round(50*power);const hues=['#fff3b0','#ffbb4d','#ff7338','#f04b25','#a5eaff'];
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2,speed=(45+Math.random()*200)*power,life=.45+Math.random()*1.2;
+    particles.push({x,y,px:x,py:y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life,max:life,size:(.9+Math.random()*3)*power,color:hues[Math.floor(Math.random()*hues.length)],debris:i%7===0});
+  }
+  for(let i=0;i<Math.ceil(6*power);i++){const life=.7+Math.random()*.6;particles.push({x:x+(Math.random()-.5)*18,y:y+(Math.random()-.5)*18,vx:(Math.random()-.5)*45,vy:-25-Math.random()*40,life,max:life,size:12+Math.random()*16,puff:true});}
+  if(particles.length>700)particles=particles.slice(-700);
+  shockwaves.push({x,y,r:5,life:.65,max:.65,power});flashes.push({x,y,life:.24,max:.24,power});startFx();
 }
-buildFavAnimalRow();
-buildFavColorRow();
+function startFx(){if(!animationFrame){lastFrame=performance.now();animationFrame=requestAnimationFrame(drawFx);}}
+function drawFx(now){
+  const ctx=canvasReady();if(!ctx){animationFrame=0;return;}const realDt=Math.min((now-lastFrame)/1000,.035),dt=realDt*(now<slowUntil?.48:1);lastFrame=now;ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+  particles=particles.filter(p=>p.life>0);shockwaves=shockwaves.filter(p=>p.life>0);flashes=flashes.filter(p=>p.life>0);
+  particles.forEach(p=>{
+    p.life-=dt;p.px=p.x;p.py=p.y;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.pow(.35,dt);p.vy+=p.puff?-8*dt:105*dt;const alpha=Math.max(0,p.life/p.max);
+    if(p.puff){ctx.globalCompositeOperation='source-over';const r=p.size*(1+(1-alpha)*2),g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);g.addColorStop(0,`rgba(91,85,92,${alpha*.28})`);g.addColorStop(1,'rgba(20,27,38,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();}
+    else{ctx.globalCompositeOperation='lighter';ctx.globalAlpha=alpha;ctx.fillStyle=p.color;ctx.strokeStyle=p.color;ctx.lineWidth=p.size;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*.035,p.y-p.vy*.035);ctx.stroke();if(p.debris){ctx.save();ctx.translate(p.x,p.y);ctx.rotate((1-alpha)*7);ctx.fillRect(-p.size,-p.size,p.size*2.5,p.size*1.4);ctx.restore();}ctx.globalAlpha=1;}
+  });
+  ctx.globalCompositeOperation='lighter';shockwaves.forEach(s=>{s.life-=dt;s.r+=dt*220*s.power;ctx.globalAlpha=Math.max(0,s.life/s.max)*.6;ctx.strokeStyle='#ffd191';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(s.x,s.y,s.r,s.r*.62,0,0,Math.PI*2);ctx.stroke();});
+  flashes.forEach(f=>{f.life-=dt;const alpha=Math.max(0,f.life/f.max),r=(32+(1-alpha)*65)*f.power;const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,r);g.addColorStop(0,`rgba(255,251,221,${alpha*.95})`);g.addColorStop(.2,`rgba(255,184,68,${alpha*.8})`);g.addColorStop(1,'rgba(255,68,15,0)');ctx.globalAlpha=1;ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,r,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+  streaks=streaks.filter(s=>s.life>0);streaks.forEach(s=>{s.life-=realDt;const p=Math.min(1,1-s.life/s.max),tail=Math.max(0,p-.2);ctx.globalCompositeOperation='lighter';ctx.lineWidth=3;ctx.strokeStyle='#bdfaff';ctx.shadowBlur=12;ctx.shadowColor='#67ddff';ctx.beginPath();ctx.moveTo(s.sx+(s.x-s.sx)*tail,s.sy+(s.y-s.sy)*tail);ctx.lineTo(s.sx+(s.x-s.sx)*p,s.sy+(s.y-s.sy)*p);ctx.stroke();ctx.shadowBlur=0;});ctx.globalCompositeOperation='source-over';
+  if(particles.length||shockwaves.length||flashes.length||streaks.length)animationFrame=requestAnimationFrame(drawFx);else{animationFrame=0;ctx.clearRect(0,0,window.innerWidth,window.innerHeight);}
+}
+function pointOnGrid(grid,x,y){const r=grid.getBoundingClientRect();return {x:r.left+(x+.5)*r.width/10,y:r.top+(y+.5)*r.height/10};}
+function callout(text){const el=$('impactCallout');el.textContent=text;el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
+function launchPod(point,commander){
+  const c=profile(commander),pod=document.createElement('div');pod.className='escape-pod '+c.id;pod.dataset.commander=c.id;pod.style.left=point.x+'px';pod.style.top=point.y+'px';pod.style.setProperty('--ci',COMMANDERS.indexOf(c));pod.style.setProperty('--dx',(Math.random()>.5?1:-1)*(100+Math.random()*180)+'px');pod.style.setProperty('--spin',(c.id==='fizzle'?-155:c.id==='bloop'?95:25)+'deg');$('escapeLayer').appendChild(pod);later(()=>pod.remove(),2600);
+}
+function animateShot(event){
+  const selection=sectorSelection;activateSector(event.pid===myId?'own':'enemy');
+  if(event.pid===myId)later(()=>{if(selection===sectorSelection&&meta&&meta.phase==='battle'&&meta.turnPlayerId===myId)activateSector('enemy');},event.destroyed?2600:1100);
+  const grid=$(event.pid!==myId?'enemyGrid':'myGrid'),point=pointOnGrid(grid,event.shot.x,event.shot.y);
+  if(cinema){streaks.push({sx:point.x-170,sy:point.y-160,x:point.x,y:point.y,life:.18,max:.18});playSound('laser');startFx();later(()=>impactShot(event),180);}else impactShot(event);
+}
+function impactShot(event){
+  const enemy=event.pid!==myId,grid=$(enemy?'enemyGrid':'myGrid'),point=pointOnGrid(grid,event.shot.x,event.shot.y);
+  const cell=Array.from(grid.querySelectorAll('.cell')).find(c=>Number(c.dataset.x)===event.shot.x&&Number(c.dataset.y)===event.shot.y);
+  if(cell){cell.classList.add('impact-cell');later(()=>cell.classList.remove('impact-cell'),650);}
+  if(event.shot.result==='miss'){playSound('miss');speak(enemy?'miss':'intro');if(cinema){shockwaves.push({x:point.x,y:point.y,r:3,life:.5,max:.5,power:.3});startFx();}return;}
+  playSound(event.destroyed?'destroy':'hit');burst(point.x,point.y,event.destroyed?1.2:.65);
+  if(!event.destroyed){speak(enemy?'hit':'hurt');return;}
+  if(event.final&&cinema)slowUntil=performance.now()+350;
+  if(cinema){grid.closest('.board-card').classList.remove('battle-jolt');void grid.offsetWidth;grid.closest('.board-card').classList.add('battle-jolt');}
+  callout(event.final?'REACTOR MELTDOWN':event.destroyed.name.toUpperCase()+' DESTROYED');
+  event.destroyed.cells.forEach(([x,y],i)=>later(()=>{const p=pointOnGrid(grid,x,y);burst(p.x,p.y,event.final?1.65:1.05);},100+i*90));
+  const xs=event.destroyed.cells.map(c=>c[0]),ys=event.destroyed.cells.map(c=>c[1]);const center=pointOnGrid(grid,xs.reduce((a,b)=>a+b)/xs.length,ys.reduce((a,b)=>a+b)/ys.length);
+  later(()=>{burst(center.x,center.y,event.final?2.2:1.55);const p=players.find(p=>p.id===event.pid);launchPod(center,commanderFor(p).id);speak('sunk',enemy);},cinema?520:80);
+}
+
 
 // ============== STATE ==============
-let room = '', myName = '', myAnimal = null, myId = Math.random().toString(36).slice(2,9);
+let room = '', myName = '', myCommander = setting('aa_commander','zog'), myId = persistentId();
 let players = [];
 let meta = null;
 let boards = {};
@@ -377,18 +348,10 @@ let orientation = 'H';
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function cellKey(x,y){ return x+','+y; }
 function opponentPlayer(){ return players.find(p=>p.id!==myId) || null; }
-function animalIconFor(name){
-  const a = FAVORITE_ANIMALS.find(x=>x.name===name);
-  return a ? a.icon : '';
-}
 
-// ============== STORAGE (our own serverless API, backed by a private Redis store) ==============
-// Room state lives behind /api/room (see api/room.js) instead of a public
-// third-party service — the store's credentials never reach the browser,
-// room codes/keys are validated server-side, and idle rooms expire on their
-// own. Access control is still just "knowing the room code" (same model as
-// before) — that's an accepted trade-off for a zero-login party game; don't
-// reuse this room-code pattern for anything that needs real access control.
+// ============== STORAGE ==============
+// Room state lives behind /api/room (see api/room.js), which holds the Redis
+// credentials server-side. Access control is still "knows the room code".
 function setConnStatus(ok){
   connOk = ok;
   const el = document.getElementById('connStatus');
@@ -499,21 +462,29 @@ function showSetupSub(id){
 }
 
 // ============== LANDING ==============
+const CALLSIGN_ADJECTIVES = ['Nova','Quantum','Stellar','Solar','Nebula','Ion','Lunar','Cosmic','Plasma','Orbital','Radiant','Void'];
+const CALLSIGN_NOUNS = ['Warden','Voyager','Sentinel','Drifter','Ranger','Cipher','Pioneer','Strider','Beacon','Pilot','Comet','Signal'];
+function randomCallsign(){
+  const adjective=CALLSIGN_ADJECTIVES[Math.floor(Math.random()*CALLSIGN_ADJECTIVES.length)];
+  const noun=CALLSIGN_NOUNS[Math.floor(Math.random()*CALLSIGN_NOUNS.length)];
+  return adjective+' '+noun;
+}
+document.getElementById('randomNameBtn').addEventListener('click', function(){
+  const input=document.getElementById('nameInput');
+  input.value=randomCallsign();
+  saveSetting('aa_name',input.value);
+  input.focus();
+  input.select();
+});
 document.getElementById('showJoinBtn').addEventListener('click', function(){
   const box = document.getElementById('joinBox');
   const nowOpen = box.classList.toggle('hidden') === false;
   this.setAttribute('aria-expanded', String(nowOpen));
 });
-document.getElementById('regenNameBtn').addEventListener('click', function(){
-  if(!favColor) return;
-  myName = randomMythName(favColor);
-  renderNamePreview();
-});
 document.getElementById('createBtn').addEventListener('click', async function(){
-  if(!favAnimal){ alert('Pick your favorite animal first!'); return; }
-  if(!favColor){ alert('Pick your favorite color first!'); return; }
-  if(!myName){ myName = generateMythName(favAnimal, favColor); renderNamePreview(); }
-  myAnimal = favAnimal;
+  myName = document.getElementById('nameInput').value.trim();
+  if(!myName){ alert('Enter your name first!'); return; }
+  saveSetting('aa_name',myName);
   const btn = this;
   btn.disabled = true; btn.textContent = 'Creating battle...';
   try{
@@ -523,15 +494,14 @@ document.getElementById('createBtn').addEventListener('click', async function(){
   }catch(e){
     alert('Could not create a battle right now (' + e.message + '). Check your connection and try again.');
   }
-  btn.disabled = false; btn.textContent = '🎉 Create a new battle';
+  btn.disabled = false; btn.textContent = 'Create a battle ↗';
 });
 document.getElementById('joinBtn').addEventListener('click', async function(){
-  const code = document.getElementById('codeInput').value.trim().replace(/[^a-zA-Z0-9_-]/g,'');
-  if(!favAnimal){ alert('Pick your favorite animal first!'); return; }
-  if(!favColor){ alert('Pick your favorite color first!'); return; }
+  myName = document.getElementById('nameInput').value.trim();
+  const code = document.getElementById('codeInput').value.trim().replace(/[^A-Za-z0-9_-]/g,'');
+  if(!myName){ alert('Enter your name first!'); return; }
   if(!code){ alert('Paste the battle code!'); return; }
-  if(!myName){ myName = generateMythName(favAnimal, favColor); renderNamePreview(); }
-  myAnimal = favAnimal;
+  saveSetting('aa_name',myName);
 
   this.disabled = true;
   const original = this.textContent;
@@ -555,11 +525,11 @@ async function enterRoom(){
   players = await loadJSON('players') || [];
   if(!players.find(p=>p.id===myId)){
     if(players.length>=2){ alert('That battle already has 2 commanders.'); return; }
-    players.push({id:myId, name:myName, score:0, animal: myAnimal});
+    players.push({id:myId, name:myName, score:0, commander: myCommander});
     await saveJSON('players', players);
     const check = await loadJSON('players') || [];
     if(!check.find(p=>p.id===myId)){
-      check.push({id:myId, name:myName, score:0, animal: myAnimal});
+      check.push({id:myId, name:myName, score:0, commander: myCommander});
       await saveJSON('players', check);
       players = check;
     } else {
@@ -570,7 +540,7 @@ async function enterRoom(){
   boards = await loadJSON('boards') || {};
   ready = await loadJSON('ready') || {};
   document.getElementById('lobbyCode').textContent = room;
-  startPolling();
+  resetPresentation();primeShotLedger();startPolling();
   if(meta && meta.phase){ showScreen('screen-setup'); } else { showScreen('screen-lobby'); }
 }
 
@@ -580,68 +550,40 @@ function buildJoinLink(){
   url.searchParams.set('room', room);
   return url.toString();
 }
-document.getElementById('copyLinkBtn').addEventListener('click', async function(){
-  const btn = this; const original = btn.textContent;
-  const link = buildJoinLink();
-
-  // Prefer the native share sheet (Messages, WhatsApp, Mail, etc.) where
-  // available — mainly mobile browsers. Falls back to clipboard-copy
-  // everywhere else.
-  if(navigator.share){
-    try{
-      await navigator.share({ title:'Alien Armada', text:`Join my Alien Armada battle! Battle code: ${room}`, url:link });
-      return;
-    }catch(e){
-      if(e && e.name==='AbortError') return; // they cancelled the share sheet, not an error
+document.getElementById('shareLinkBtn').addEventListener('click', async function(){
+  const link=buildJoinLink();
+  const status=document.getElementById('shareStatus');
+  try{
+    if(navigator.share){
+      await navigator.share({title:'Alien Armada battle invite',text:'Join my Alien Armada battle.',url:link});
+      status.textContent='Invite ready to send.';
+    }else if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(link);
+      status.textContent='Invite link copied. Paste it into a message.';
+    }else{
+      throw new Error('sharing unavailable');
     }
-  }
-
-  try{
-    if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard api');
-    await navigator.clipboard.writeText(link);
-    btn.textContent = '✅ Link copied!';
-  }catch(e){ btn.textContent = '⚠️ Could not copy — long-press the code below'; }
-  setTimeout(()=>{ btn.textContent = original; }, 2500);
-});
-document.getElementById('copyCodeBtn').addEventListener('click', async function(){
-  const btn = this; const original = btn.textContent;
-  try{
-    if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard api');
-    await navigator.clipboard.writeText(room);
-    btn.textContent = '✅ Copied!';
   }catch(e){
-    const codeEl = document.getElementById('lobbyCode');
-    const range = document.createRange();
-    range.selectNodeContents(codeEl);
-    const sel = window.getSelection();
-    sel.removeAllRanges(); sel.addRange(range);
-    btn.textContent = '⚠️ Tap-hold the code above';
+    if(e.name!=='AbortError') status.textContent='Sharing is unavailable here. Copy the URL from your browser.';
   }
-  setTimeout(()=>{ btn.textContent = original; }, 2500);
 });
 
 document.getElementById('leaveLobbyBtn').addEventListener('click', resetToLanding);
 document.getElementById('leaveBattleBtn').addEventListener('click', resetToLanding);
 function resetToLanding(){
-  if(pollTimer) clearInterval(pollTimer);
-  room=''; meta=null; players=[]; boards={}; ready={};
-  setupInitialized=false; chargeSelection=[]; myShips=[]; currentShipIdx=0;
-  showScreen('screen-landing');
+  if(pollTimer)clearInterval(pollTimer);pollTimer=null;resetPresentation();room='';meta=null;players=[];boards={};ready={};setupInitialized=false;chargeSelection=[];myShips=[];currentShipIdx=0;firing=false;polling=false;
+  $('commsName').textContent='';$('lobbyPlayers').dataset.signature='';$('confirmFleetBtn').classList.add('hidden');showScreen('screen-landing');
 }
 
 function renderLobbyPlayers(){
-  const el = document.getElementById('lobbyPlayers');
-  el.innerHTML = '';
-  players.forEach(p=>{
-    const row = document.createElement('div');
-    row.className='player-row';
-    row.innerHTML = `<span>${animalIconFor(p.animal)} ${escapeHtml(p.name)}${p.id===myId?' (you)':''}</span>`;
-    el.appendChild(row);
-  });
+  const el=$('lobbyPlayers');const signature=JSON.stringify(players);if(el.dataset.signature===signature)return;el.dataset.signature=signature;el.innerHTML='';
+  players.forEach(p=>{const row=document.createElement('div');row.className='player-row';row.innerHTML=commanderBadgeHtml(p)+`<div class="player-info"><strong>${escapeHtml(p.name)}${p.id===myId?' (you)':''}</strong><small>${commanderFor(p).name}</small></div><span class="tag">READY</span>`;el.appendChild(row);});
+  if(players.length<2){const row=document.createElement('div');row.className='player-row empty';row.textContent='An unsuspecting rival goes here.';el.appendChild(row);}
+  $('lobbyHint').textContent=players.length<2?'Waiting for a second commander…':'Both commanders are here. Begin when ready.';
 }
 document.getElementById('startSetupBtn').addEventListener('click', async ()=>{
   if(players.length<2){ alert('Need a second commander to join first!'); return; }
-  await saveJSON('meta', {phase:'setup', turnPlayerId:null, winnerId:null, turnCount:0});
+  await saveJSON('meta', {phase:'setup', roundId:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7), turnPlayerId:null, winnerId:null, turnCount:0});
   await saveJSON('boards', {});
   await saveJSON('ready', {});
 });
@@ -653,78 +595,37 @@ function startPolling(){
   pollAll();
 }
 async function pollAll(){
-  const newPlayers = await loadJSON('players');
-  if(newPlayers) players = newPlayers;
-  const newMeta = await loadJSON('meta');
-  if(newMeta) meta = newMeta;
-  const newBoards = await loadJSON('boards');
-  if(newBoards) boards = newBoards;
-  const newReady = await loadJSON('ready');
-  if(newReady) ready = newReady;
-
-  renderLobbyPlayers();
-
-  if(!meta || !meta.phase){
-    showScreen('screen-lobby');
-    document.getElementById('startSetupBtn').classList.toggle('hidden', players.length<2);
-    return;
-  }
-
-  if(meta.phase==='setup'){
-    showScreen('screen-setup');
-    if(players.length===2){
-      const [p1,p2] = players;
-      const r1 = ready[p1.id]||{}, r2 = ready[p2.id]||{};
-      if(r1.charges && r1.fleet && r2.charges && r2.fleet){
-        await saveJSON('meta', {phase:'battle', turnPlayerId:p1.id, winnerId:null, turnCount:0});
-        return;
+  if(polling||firing||!room)return;polling=true;const generation=lifecycle;
+  try{
+    const [newPlayers,newMeta,newBoards,newReady]=await Promise.all([loadJSON('players'),loadJSON('meta'),loadJSON('boards'),loadJSON('ready')]);
+    if(generation!==lifecycle)return;if(newPlayers)players=newPlayers;if(newMeta)meta=newMeta;if(newBoards)boards=newBoards;if(newReady)ready=newReady;
+    if(pendingAdvance&&meta){const pending=pendingAdvance;if(meta.roundId!==pending.next.roundId||(meta.turnCount||0)>=pending.next.turnCount)pendingAdvance=null;else if(meta.turnPlayerId===pending.previousTurn&&(meta.turnCount||0)===pending.previousCount){if(await saveJSON('meta',pending.next)){meta=pending.next;pendingAdvance=null;}}}
+    renderLobbyPlayers();
+    if(!meta||!meta.phase){showScreen('screen-lobby');$('startSetupBtn').classList.toggle('hidden',players.length<2);return;}
+    if(meta.phase==='setup'){
+      if(lastPhase==='battle'||lastPhase==='gameOver'||effectRound!==(meta.roundId||room)){
+        setupInitialized=false;chargeSelection=[];myShips=[];currentShipIdx=0;orientation='H';observedShots.clear();effectPrimed=true;effectRound=meta.roundId||room;lastBattleRender='';endScreenAt=0;
+        if(endScreenTimer)clearTimeout(endScreenTimer);clearEffects();$('confirmFleetBtn').classList.add('hidden');$('rotateBtn').textContent='↻ Horizontal';$('commsName').textContent='';
       }
+      lastPhase='setup';showScreen('screen-setup');
+      if(players.length===2){const [p1,p2]=players,r1=ready[p1.id]||{},r2=ready[p2.id]||{};if(r1.charges&&r1.fleet&&r2.charges&&r2.fleet){if(p1.id===myId)await saveJSON('meta',{...meta,phase:'battle',turnPlayerId:p1.id,winnerId:null,turnCount:0});return;}}
+      const mine=ready[myId]||{};
+      if(mine.charges&&mine.fleet){showSetupSub('setup-waiting');$('setupWaitingText').textContent=`Standing by for ${opponentPlayer()?.name||'your opponent'} to finish deployment…`;}
+      else if(!setupInitialized){setupInitialized=true;chargeSelection=[];myShips=[];currentShipIdx=0;orientation='H';buildChargeGrid();showSetupSub('setup-charges');}
+      return;
     }
-    const mine = ready[myId]||{};
-    if(mine.charges && mine.fleet){
-      showSetupSub('setup-waiting');
-      const opp = opponentPlayer();
-      document.getElementById('setupWaitingText').textContent = opp
-        ? `Standing by for ${opp.name} to finish deployment...`
-        : 'Standing by for your opponent...';
-    } else if(!setupInitialized){
-      setupInitialized = true;
-      chargeSelection = []; myShips = []; currentShipIdx = 0; orientation='H';
-      buildChargeGrid();
-      showSetupSub('setup-charges');
-    }
-    return;
-  }
-
-  if(meta.phase==='battle'){
-    showScreen('screen-battle');
-    renderBattle();
-    return;
-  }
-
-  if(meta.phase==='gameOver'){
-    showScreen('screen-over');
-    renderGameOver();
-    return;
-  }
+    if(meta.phase==='battle'||meta.phase==='gameOver'){lastPhase=meta.phase;presentCombat();}
+  }finally{polling=false;}
 }
 
 // ============== SETUP: DEPTH CHARGES ==============
 function buildChargeGrid(){
-  const grid = document.getElementById('chargeGrid');
-  grid.innerHTML='';
-  for(let y=0;y<N;y++){
-    for(let x=0;x<N;x++){
-      const btn = document.createElement('button');
-      btn.type='button'; btn.className='cell';
-      if(chargeSelection.some(([cx,cy])=>cx===x&&cy===y)) btn.classList.add('charge-selected');
-      btn.setAttribute('aria-label', `Target cell column ${x+1} row ${y+1}`);
-      btn.addEventListener('click', ()=>toggleCharge(x,y));
-      grid.appendChild(btn);
-    }
+  const grid=$('chargeGrid'),focus=focusCoordinate(grid);grid.innerHTML='';
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const selected=chargeSelection.some(c=>c[0]===x&&c[1]===y),b=makeCell(x,y,selected?'plasma mine selected':'place plasma mine');
+    b.classList.toggle('charge-selected',selected);b.setAttribute('aria-pressed',String(selected));b.onclick=()=>toggleCharge(x,y);grid.appendChild(b);
   }
-  document.getElementById('chargeCount').textContent = `${chargeSelection.length} / ${MAX_CHARGES} selected`;
-  document.getElementById('confirmChargesBtn').disabled = chargeSelection.length!==MAX_CHARGES;
+  $('chargeCount').textContent=`${chargeSelection.length} / ${MAX_CHARGES} mines armed`;$('confirmChargesBtn').disabled=chargeSelection.length!==MAX_CHARGES;restoreCoordinate(grid,focus);
 }
 function toggleCharge(x,y){
   const idx = chargeSelection.findIndex(([cx,cy])=>cx===x&&cy===y);
@@ -751,48 +652,32 @@ document.getElementById('confirmChargesBtn').addEventListener('click', async ()=
 
 // ============== SETUP: FLEET ==============
 function buildShipList(){
-  const el = document.getElementById('shipList');
-  el.innerHTML='';
-  SHIP_TEMPLATE.forEach((s,i)=>{
-    const placed = myShips[i];
-    const chip = document.createElement('div');
-    chip.className = 'ship-chip' + (i===currentShipIdx && !placed ? ' active':'') + (placed?' done':'');
-    chip.innerHTML = `<span>${s.icon} ${s.name}</span><span>${s.size} cells</span>`;
-    el.appendChild(chip);
+  const el=$('shipList');el.innerHTML='';SHIP_TEMPLATE.forEach((s,i)=>{
+    const placed=!!myShips[i],chip=document.createElement('div');chip.className='ship-chip'+(i===currentShipIdx&&!placed?' active':'')+(placed?' done':'');
+    const art=document.createElement('div');art.className='ship-art';art.setAttribute('aria-hidden','true');shipStyle(art,i);chip.appendChild(art);
+    const label=document.createElement('div');label.innerHTML=`<strong>${s.name}</strong><small>${s.size} cells${placed?' · placed':''}</small>`;chip.appendChild(label);
+    if(placed){const tick=document.createElement('span');tick.className='placed-tick';tick.textContent='✓';chip.appendChild(tick);}el.appendChild(chip);
   });
+  $('deploymentStatus').textContent=currentShipIdx>=5?'FLEET READY':`${currentShipIdx} / 5 PLACED`;
+  $('placementHint').textContent=currentShipIdx>=5?'Fleet deployed. All escape pods accounted for.':`Place your ${SHIP_TEMPLATE[currentShipIdx].name}: ${SHIP_TEMPLATE[currentShipIdx].size} cells, ${orientation==='H'?'horizontal':'vertical'}.`;
 }
 function buildFleetGrid(){
-  const grid = document.getElementById('fleetGrid');
-  grid.innerHTML='';
-  for(let y=0;y<N;y++){
-    for(let x=0;x<N;x++){
-      const btn=document.createElement('button');
-      btn.type='button'; btn.className='cell';
-      const occ = myShips.some(s=> s && s.cells.some(([sx,sy])=>sx===x&&sy===y));
-      if(occ) btn.classList.add('ship');
-      btn.setAttribute('aria-label', `Deploy cell column ${x+1} row ${y+1}`);
-      btn.addEventListener('click', ()=>attemptPlace(x,y));
-      grid.appendChild(btn);
-    }
+  const grid=$('fleetGrid'),focus=focusCoordinate(grid);grid.innerHTML='';const ships=myShips.filter(Boolean);addShipLayer(grid,ships);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const ship=ships.find(s=>s.cells.some(c=>c[0]===x&&c[1]===y)),b=makeCell(x,y,ship?ship.name:'deploy here');
+    if(ship)b.classList.add('ship');b.onclick=()=>attemptPlace(x,y);b.onpointerenter=e=>{if(e.pointerType!=='touch')previewPlacement(x,y);};grid.appendChild(b);
   }
+  grid.onpointerleave=clearPlacementPreview;restoreCoordinate(grid,focus);
 }
 function attemptPlace(x,y){
-  if(currentShipIdx>=SHIP_TEMPLATE.length) return;
-  const tmpl = SHIP_TEMPLATE[currentShipIdx];
-  const placedSoFar = myShips.filter(Boolean);
-  const cells = canPlace(placedSoFar, x, y, tmpl.size, orientation);
-  if(!cells) return;
-  myShips[currentShipIdx] = {name:tmpl.name, size:tmpl.size, icon:tmpl.icon, cells};
-  currentShipIdx++;
-  buildFleetGrid();
-  buildShipList();
-  if(currentShipIdx>=SHIP_TEMPLATE.length){
-    document.getElementById('confirmFleetBtn').classList.remove('hidden');
-  }
+  if(currentShipIdx>=SHIP_TEMPLATE.length)return;const tmpl=SHIP_TEMPLATE[currentShipIdx],cells=canPlace(myShips.filter(Boolean),x,y,tmpl.size,orientation);
+  if(!cells){$('placementHint').textContent='That ship needs more room. Try a clear starting square or rotate it.';return;}
+  myShips[currentShipIdx]={...tmpl,cells};currentShipIdx++;buildFleetGrid();buildShipList();$('confirmFleetBtn').classList.toggle('hidden',currentShipIdx<SHIP_TEMPLATE.length);playSound('ready');
 }
 document.getElementById('rotateBtn').addEventListener('click', function(){
   orientation = orientation==='H' ? 'V' : 'H';
-  this.textContent = '🔄 Orientation: ' + (orientation==='H'?'Horizontal':'Vertical');
+  this.textContent = '↻ ' + (orientation==='H'?'Horizontal':'Vertical');
+  buildShipList();clearPlacementPreview();
 });
 document.getElementById('randomFleetBtn').addEventListener('click', ()=>{
   myShips = randomFleet();
@@ -819,106 +704,73 @@ document.getElementById('confirmFleetBtn').addEventListener('click', async ()=>{
 
 // ============== BATTLE ==============
 function renderBattle(){
-  const opp = opponentPlayer();
-  const myBoard = boards[myId] || {ships:[],charges:[],shotsAgainst:[]};
-  const oppBoard = opp ? (boards[opp.id] || {ships:[],charges:[],shotsAgainst:[]}) : {ships:[],charges:[],shotsAgainst:[]};
-
-  const myTurn = meta.turnPlayerId===myId;
-  const banner = document.getElementById('turnBanner');
-  banner.className = 'turn-banner' + (myTurn?'':' waiting');
-  banner.textContent = myTurn ? '🎯 Your move, Commander!' : `⏳ Waiting for ${opp?opp.name:'opponent'}...`;
-
-  buildEnemyGrid(oppBoard, myTurn);
-  buildMyGrid(myBoard);
+  const opp=opponentPlayer(),myBoard=boards[myId]||{ships:[],charges:[],shotsAgainst:[]},oppBoard=opp?(boards[opp.id]||{ships:[],charges:[],shotsAgainst:[]}):{ships:[],charges:[],shotsAgainst:[]};
+  const myTurn=meta.turnPlayerId===myId&&meta.phase==='battle',banner=$('turnBanner');banner.className='turn-banner'+(myTurn?'':' waiting');
+  banner.textContent=meta.phase==='gameOver'?'Reactor breach…':pendingAdvance?'Synchronizing shot…':firing?'Firing…':myTurn?'Your move, Commander':`Waiting for ${opp?opp.name:'your rival'}`;
+  const signature=JSON.stringify([myBoard,oppBoard,myTurn,meta.phase,firing,!!pendingAdvance]);
+  if(signature!==lastBattleRender){buildEnemyGrid(oppBoard,myTurn);buildMyGrid(myBoard);renderFleetStatus('enemyFleetStatus',oppBoard,true);renderFleetStatus('ownFleetStatus',myBoard,false);lastBattleRender=signature;}
+  $('targetHint').textContent=myTurn?'Choose a coordinate. Make it count.':'Tracking the enemy transmission…';
+  $('fleetHint').textContent=computeShips(myBoard).filter(s=>!s.sunk).length+' of 5 ships still operational.';
+  $('battleCount').textContent=(meta.turnCount||0)+' shots fired · plasma mines stay secret';
+  if(myTurn&&!wasMyTurn){activateSector('enemy');if(keyboardTarget){const cells=Array.from($('enemyGrid').querySelectorAll('.cell'));const preferred=cells.find(c=>c.dataset.x===keyboardTarget[0]&&c.dataset.y===keyboardTarget[1]&&!c.disabled)||cells.find(c=>!c.disabled);if(preferred)preferred.focus({preventScroll:true});}}wasMyTurn=myTurn;
+  if(!$('commsName').textContent)speak('intro');
 }
-function buildEnemyGrid(oppBoard, myTurn){
-  const grid = document.getElementById('enemyGrid');
-  grid.innerHTML='';
-  const shipStatus = computeShips(oppBoard);
-  for(let y=0;y<N;y++){
-    for(let x=0;x<N;x++){
-      const btn=document.createElement('button');
-      btn.type='button'; btn.className='cell';
-      const shot = (oppBoard.shotsAgainst||[]).find(s=>s.x===x&&s.y===y);
-      const sunkShip = shipStatus.find(s=> s.sunk && s.cells.some(([sx,sy])=>sx===x&&sy===y));
-      if(sunkShip){ btn.classList.add('sunk'); btn.textContent = sunkShip.icon; }
-      else if(shot){
-        btn.classList.add(shot.result==='hit' ? 'hit':'miss');
-        btn.textContent = shot.result==='hit' ? '💥' : '🌊';
-      }
-      btn.disabled = !myTurn || !!shot || meta.phase!=='battle';
-      btn.setAttribute('aria-label', `Fire at column ${x+1} row ${y+1}`);
-      btn.addEventListener('click', ()=>fireAt(x,y));
-      grid.appendChild(btn);
-    }
-  }
+function buildEnemyGrid(oppBoard,myTurn){
+  const grid=$('enemyGrid'),focus=focusCoordinate(grid);grid.innerHTML='';const status=computeShips(oppBoard);addShipLayer(grid,status.filter(s=>s.sunk));
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const shot=(oppBoard.shotsAgainst||[]).find(s=>s.x===x&&s.y===y),sunk=status.find(s=>s.sunk&&s.cells.some(c=>c[0]===x&&c[1]===y));
+    const label=sunk?`${sunk.name} destroyed`:shot?shot.result==='hit'?'confirmed hit':'confirmed miss':'unknown sector; fire here';
+    const b=makeCell(x,y,label);if(sunk)b.classList.add('sunk');else if(shot)b.classList.add(shot.result==='hit'?'hit':'miss');
+    b.disabled=!myTurn||!!shot||firing||!!pendingAdvance||meta.phase!=='battle';b.onclick=()=>fireAt(x,y);b.onfocus=()=>{keyboardTarget=[String(x),String(y)];};grid.appendChild(b);
+  }restoreCoordinate(grid,focus);
 }
 function buildMyGrid(myBoard){
-  const grid = document.getElementById('myGrid');
-  grid.innerHTML='';
-  for(let y=0;y<N;y++){
-    for(let x=0;x<N;x++){
-      const btn=document.createElement('button');
-      btn.type='button'; btn.className='cell'; btn.disabled=true;
-      const hasShip = isCellShip(myBoard,x,y);
-      const direct = isCellDirectHit(myBoard,x,y);
-      const chargeHit = isCellChargeHit(myBoard,x,y);
-      const miss = isCellMiss(myBoard,x,y);
-      if(chargeHit){ btn.classList.add('charge-hit'); btn.textContent='💣'; }
-      else if(direct && hasShip){ btn.classList.add('hit'); btn.textContent='💥'; }
-      else if(hasShip){ btn.classList.add('ship'); }
-      else if(miss){ btn.classList.add('miss'); btn.textContent='🌊'; }
-      grid.appendChild(btn);
-    }
+  const grid=$('myGrid');grid.innerHTML='';const status=computeShips(myBoard);addShipLayer(grid,status);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const ship=status.find(s=>s.cells.some(c=>c[0]===x&&c[1]===y)),direct=isCellDirectHit(myBoard,x,y),charge=isCellChargeHit(myBoard,x,y),miss=isCellMiss(myBoard,x,y);
+    const label=ship?`${ship.name}${ship.sunk?' destroyed':charge?' mine damage':direct?' damaged':''}`:miss?'enemy miss':'empty space';const b=makeCell(x,y,label);b.disabled=true;
+    if(ship)b.classList.add('ship');if(charge)b.classList.add('charge-hit');else if(direct&&ship)b.classList.add('hit');else if(miss)b.classList.add('miss');grid.appendChild(b);
   }
 }
 async function fireAt(x,y){
-  const opp = opponentPlayer();
-  if(!opp) return;
-  if(!meta || meta.turnPlayerId!==myId || meta.phase!=='battle') return;
-  const b = await loadJSON('boards') || {};
-  ensureBoardSkeleton(b, opp.id);
-  const already = b[opp.id].shotsAgainst.some(s=>s.x===x&&s.y===y);
-  if(already) return;
-  const hit = (b[opp.id].ships||[]).some(sh=>sh.cells.some(([sx,sy])=>sx===x&&sy===y));
-  b[opp.id].shotsAgainst.push({x,y,result: hit?'hit':'miss'});
-  await saveJSON('boards', b);
-  boards = b;
-
-  const oppShips = computeShips(b[opp.id]);
-  const allSunk = oppShips.length===SHIP_TEMPLATE.length && oppShips.every(s=>s.sunk);
-  if(allSunk){
-    await saveJSON('meta', {phase:'gameOver', turnPlayerId:null, winnerId:myId, turnCount:(meta.turnCount||0)+1});
-  } else {
-    await saveJSON('meta', {phase:'battle', turnPlayerId:opp.id, winnerId:null, turnCount:(meta.turnCount||0)+1});
-  }
-  const freshMeta = await loadJSON('meta');
-  if(freshMeta) meta = freshMeta;
-  renderBattle();
+  const opp=opponentPlayer();if(!opp||!meta||meta.turnPlayerId!==myId||meta.phase!=='battle'||firing||pendingAdvance)return;
+  if(!Number.isInteger(x)||!Number.isInteger(y)||x<0||x>=N||y<0||y>=N)return;
+  firing=true;renderBattle();const generation=lifecycle;
+  try{
+    const fresh=await loadJSON('meta');if(!fresh||fresh.phase!=='battle'||fresh.turnPlayerId!==myId)return;
+    const b=await loadJSON('boards');if(!b)throw new Error('Could not load the battle.');ensureBoardSkeleton(b,opp.id);
+    if(b[opp.id].shotsAgainst.some(s=>s.x===x&&s.y===y))return;
+    if(generation!==lifecycle)return;
+    const hit=isCellShip(b[opp.id],x,y);b[opp.id].shotsAgainst.push({x,y,result:hit?'hit':'miss'});
+    if(!await saveJSON('boards',b))throw new Error('Your shot could not be saved.');
+    boards=b;const status=computeShips(b[opp.id]),allSunk=status.length===SHIP_TEMPLATE.length&&status.every(s=>s.sunk);
+    const next={...fresh,phase:allSunk?'gameOver':'battle',turnPlayerId:allSunk?null:opp.id,winnerId:allSunk?myId:null,turnCount:(fresh.turnCount||0)+1};
+    pendingAdvance={next,previousCount:fresh.turnCount||0,previousTurn:fresh.turnPlayerId};
+    if(!await saveJSON('meta',next))throw new Error('Shot saved. Reconnecting to advance the turn…');
+    if(generation!==lifecycle)return;pendingAdvance=null;meta=next;firing=false;presentCombat();
+  }catch(e){setConnStatus(false);$('commsText').textContent=e.message||'Connection interrupted. Try again in a moment.';}
+  finally{firing=false;if(meta&&meta.phase==='battle'&&generation===lifecycle)renderBattle();}
 }
 
 // ============== GAME OVER ==============
 function renderGameOver(){
-  const iWon = meta.winnerId===myId;
-  const opp = opponentPlayer();
-  document.getElementById('overTitle').textContent = iWon ? '🏆 VICTORY!' : '💥 FLEET DESTROYED';
-  document.getElementById('overSub').textContent = iWon
-    ? `You destroyed ${opp?opp.name:"their"} entire fleet!`
-    : `${opp?opp.name:'Your opponent'} destroyed your entire fleet.`;
+  const won=meta.winnerId===myId,opp=opponentPlayer(),me=players.find(p=>p.id===myId),c=commanderFor(me);
+  portrait($('resultPortrait'),c.id,won?0:1);$('overTitle').textContent=won?'Gloriously victorious.':'Tactically… departed.';
+  $('overEyebrow').textContent=won?'ENEMY FLEET ELIMINATED':'ESCAPE POD RECOVERED';$('overSub').textContent=won?`You destroyed ${opp?opp.name+"’s":'the enemy'} fleet.`:`${opp?opp.name:'Your opponent'} destroyed your fleet. Your commander made it out.`;
+  $('overQuote').textContent='“'+(won?c.victory:c.defeat)+'”';
+  const shots=(opp&&boards[opp.id]&&boards[opp.id].shotsAgainst)||[],hits=shots.filter(s=>s.result==='hit').length,accuracy=shots.length?Math.round(hits/shots.length*100):0;
+  const lost=computeShips(boards[myId]||{ships:[]}).filter(s=>s.sunk).length;
+  $('resultStats').innerHTML=`<div><b>${shots.length}</b><span>Shots fired</span></div><div><b>${accuracy}%</b><span>Direct-hit accuracy</span></div><div><b>${lost}</b><span>Escape pods launched</span></div>`;
 }
 document.getElementById('rematchBtn').addEventListener('click', async ()=>{
   await saveJSON('boards', {});
   await saveJSON('ready', {});
-  await saveJSON('meta', {phase:'setup', turnPlayerId:null, winnerId:null, turnCount:0});
+  await saveJSON('meta', {phase:'setup', roundId:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7), turnPlayerId:null, winnerId:null, turnCount:0});
   setupInitialized=false; chargeSelection=[]; myShips=[]; currentShipIdx=0;
 });
 document.getElementById('newBattleBtn').addEventListener('click', resetToLanding);
 
 // ============== JOIN-VIA-LINK ==============
-/**
- * If this page was opened via a shared join link (?room=CODE), pre-fill
- * and reveal the join form so the player never has to type the code.
- */
 function prefillRoomFromUrl(){
   const params = new URLSearchParams(window.location.search);
   const codeFromUrl = params.get('room');
@@ -926,9 +778,9 @@ function prefillRoomFromUrl(){
   document.getElementById('codeInput').value = codeFromUrl;
   document.getElementById('joinBox').classList.remove('hidden');
   document.getElementById('showJoinBtn').setAttribute('aria-expanded','true');
-  const firstAnimalBtn = document.querySelector('#favAnimalRow .animalBtn');
-  if(firstAnimalBtn) firstAnimalBtn.focus();
+  document.getElementById('nameInput').focus();
 }
+initPresentation();
 prefillRoomFromUrl();
 
 })(); // end IIFE
